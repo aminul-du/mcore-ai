@@ -1,0 +1,7 @@
+{
+  "deployment_url": "https://sorbornoai-web.pages.dev",
+  "deployment_id": "ca07c8da",
+  "status": "success",
+  "http_status": 200,
+  "framework": "next-on-pages"
+}

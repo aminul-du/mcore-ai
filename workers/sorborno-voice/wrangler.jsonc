@@ -1,0 +1,25 @@
+{
+  "name": "sorborno-voice",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    { "pattern": "voice.sorbornoai.com", "custom_domain": true }
+  ],
+  "ai": {
+    "binding": "AI"
+  },
+  "unsafe": {
+    "bindings": [
+      {
+        "type": "ratelimit",
+        "name": "RATE_LIMITER",
+        "namespace_id": "1001",
+        "simple": {
+          "limit": 10,
+          "period": 10
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "python": { "version": "Python 3.14.0", "path": "/usr/local/bin/python3.14", "sha256": "e075936c2a74218ad575c9a597cbf94d725fc16bf85ccdb0c6961107aa65ebe8" },
+  "node": { "version": "v26.13.0", "path": "/usr/bin/node", "sha256": "0adde40d1b7dfa57c8bc83cbc319758c3ec6ebba21363bb2fa752ea6b267ad1b" },
+  "pnpm": { "version": "11.28.11", "path": "/usr/local/bin/pnpm", "sha256": "67b035e322203961795e8e34ca63a08c37a4386eda94107fb3d28f3246d882ad" },
+  "rustc": { "version": "rustc 1.98.1 (48a229cea 2026-09-01)", "path": "/home/mcoreai/.cargo/bin/rustc", "sha256": "b1c8cb14e30889e7e2999e6b69e62d9e9b9ffc0f4df8180564d306d9680e6c55" },
+  "psql": { "version": "psql (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)", "path": "/usr/bin/psql", "sha256": "fc00112585bd75eb9eb6fcd11ca4cf7222acf10259a1f21eea4889536dee640a" },
+  "cosign": { "version": "  ______   ______        _______. __    _______ .__   __.
+ /      | /  __  \      /       ||  |  /  _____||  \ |  |
+|  ,----'|  |  |  |    |   (----`|  | |  |  __  |   \|  |
+|  |     |  |  |  |     \   \    |  | |  | |_ | |  . `  |
+|  `----.|  `--'  | .----)   |   |  | |  |__| | |  |\   |
+ \______| \______/  |_______/    |__|  \______| |__| \__|
+cosign: A tool for Container Signing, Verification and Storage in an OCI registry
+
+GitVersion:    v3.1.4
+GitCommit:     0e48502cf5ef34e2e60bbd3617aa19945712f705
+GitTreeState:  clean
+BuildDate:     2026-10-20T17:33:02Z
+GoVersion:     go1.27.3
+Compiler:      gc
+Platform:      linux/amd64", "path": "/usr/local/bin/cosign", "sha256": "424e2c97d0b45fd7a6b608a87f090f35633f4c23ece5f092d48bba11aaf4bbfa" },
+  "syft": { "version": "Application:   syft
+Version:       1.57.1
+BuildDate:     2026-11-09T14:36:35Z
+GitCommit:     a0c0d3890a9d79421c403e8fcadec50a2e55bf21
+GitDescription: v1.57.1
+Platform:      linux/amd64
+GoVersion:     go1.27.3
+Compiler:      gc
+SchemaVersion: 16.1.13", "path": "/usr/local/bin/syft", "sha256": "de3982edbbc250c4a40764c7b1f30bbf54b681f9b99391ee6b85bfdfa5d4dffe" },
+  "grype": { "version": "Application:         grype
+Version:             0.121.3
+BuildDate:           2026-11-09T15:11:52Z
+GitCommit:           cd1f23eb50dfb52647090158f453c7359172591f
+GitDescription:      v0.121.3
+Platform:            linux/amd64
+GoVersion:           go1.27.3
+Compiler:            gc
+Syft Version:        v1.57.1
+Supported DB Schema: 6", "path": "/usr/local/bin/grype", "sha256": "30f8f7de5dda71952a20d4955034d30a081a5d10e6bd00d67ce78b56fd0251dc" },
+  "trivy": { "version": "Version: 0.69.3", "path": "/usr/local/bin/trivy", "sha256": "8266084a71d2e6a2333bc2c69b91c93c26dee9ef39ac2587ace2df54cc9b746b" }
+}

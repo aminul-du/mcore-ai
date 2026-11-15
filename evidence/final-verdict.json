@@ -1,0 +1,27 @@
+{
+  "verdict": "LIVE-PRODUCTION-COMPLETE",
+  "timestamp": "2026-11-16",
+  "critical_cves": 0,
+  "udp_media_verified": true,
+  "mocks_present": false,
+  "tunnel_required": true,
+  "tunnel_id": "78d7fa3b-c30b-44eb-a474-d3d0aa2d963d",
+  "public_endpoints": {
+    "web_pages": "https://sorbornoai-web.pages.dev",
+    "web_custom_domain": "https://sorbornoai.com",
+    "web_primary_domain": "https://shorbornoai.com",
+    "edge_voice_worker": "https://voice.sorbornoai.com",
+    "livekit_signaling_url": "wss://livekit.mcoreai.dev"
+  },
+  "livekit": {
+    "network_mode": "host",
+    "use_external_ip": true,
+    "external_ip": "113.11.1.161",
+    "tcp_port": 7881,
+    "udp_port_range": "50000-60000",
+    "key_length_bytes": 16,
+    "secret_length_bytes": 32,
+    "agent_registration": "registered worker",
+    "insecure_warnings": 0
+  }
+}
