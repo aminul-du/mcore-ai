@@ -1,0 +1,79 @@
+{
+  "timestamp_utc": "2026-11-16T15:34:22.638495+00:00",
+  "signature": "MCORE-FDR-AIS-001",
+  "target_url": "https://sorbornoai-web.pages.dev",
+  "token_api_status": 200,
+  "token_mint_latency_ms": 685.64,
+  "webrtc_connected": true,
+  "webrtc_connection_time_ms": 16145.76,
+  "canvas_rendered": true,
+  "canvas_dimensions": {
+    "width": 1264,
+    "height": 800
+  },
+  "assistant_state": "connecting",
+  "screenshot_saved": true,
+  "screenshot_path": "/srv/mcore/evidence/browser-e2e-screenshot.png",
+  "console_events": [
+    {
+      "type": "info",
+      "text": "connection state changed: disconnected -> connecting {room: , roomID: undefined, participant: , participantID: }"
+    },
+    {
+      "type": "info",
+      "text": "signal connecting to wss://livekit.mcoreai.dev/rtc/v1?access_token=%3Credacted%3E&join_request=CAESkw4fiwgAAAAAAAAD7Vvbbhy5EYUMJFgImIf4aR8LyDM1vPWFNOZBF2tjxOsIsaxg30J1c0YdT1_C5mhG-xX7X_mBfE7QPSNPj5rUrmMHMAI-CJAOi3VYxarq7gPo-A_fHb38PT2h_IR8__LvL_5x9OLli--O6L9_OTr-XT2fa_PyX78c3c_w5LieIYgjFpMUp5hxHHEcU5oChTfv4M0VB0KTE3yCT8jkuJ2hybGdYcCTYzXTG1uqBqnlsl6jstjovEPLtshRq0tV2SKTAH_78X0HL0y9auTZh3cXb18DBgIUGHCIIJ4clzO1yosaBHy4uJpev30__ev11fT96c3VJRBCIGYgAEMKhAEhGAiNJ8fZbHc-3J-uP5GxTaka2e2pm1U75SnGeEoHSzEDo3PHgoAfEkqnHT5AMVyd__jhKZp26OlTlDA4fzcCCQarl7q5qyuN9L2u7JZ8aEPjkc2jyby023jKompsUeoZwa9WrS6qW1Xlc53NyCezuMsOmRJCts6zLipXkrIGzW97r9aoqm1qY1GW7a9UEliZShbazmWjjCpbaWyD7nKjN1a2rclQf2Foqe_1crCPwp21jZxO1-v1yVrfGpud1GYx1ZtGm6LUlW2ne09TdduiVlc56gIbuGFDN90peidFPs2Nmlt0Vy9LbZApM2XRPoJ1kWuUZUhvrK7aoq5ahMnAK382qFy3siz6Cm61XTVSZbZRbduXdJHLbep0dl9Xy4fu9yLTaDU3aiGLH-zqEWnWuby7_OebP3-4_Yt9eyOuo3ap1vin65-S-_6iimqhTWOKysr2TiEaxcBfS3YmBZH0VEaRvEhlHMn0TJ5TSSMZMcmxFBcy4lIIeZlIHMtTLjmTr4U8Y5L3luepFFiyRF5eykshaSrPuLygMjp_PFrd2C4p0poi-7jUn0qhXG0-_W7a4uf9ysZIk90bZKydqeUyNGpo1G-_UUlo1NCooVG__UaloVG7Rr0vcu1uVBGDSECkIAQQjIFgAiwCFgNLgKVAMAWCGRDMgeAECO4wAYRwICQCQmIgJAEmgGPgBDgFzoBz4BHwGHgCPAVCuh8BhGLg4tkpIGK4uUqnAh92m0jA2M0YTuHmSoxh4bTuAnSZd0G77FnkNGex2zpxW6ees1D4E425Y4F5NnDfBnduuqvybPCkh_gYSOTZEPs2uI_EhNueY6c5Jx5z6jZnHnPuNo_g9IaMYfft8sRt7bldkvZPrDHuST3FsFo2c52NGQTMl3oz1xnCbL_aPztEAqqxMxHvkRQaU8-LpUZFPhtYiq1lun88YTw0pYMF0tuSARGLhrb7hxeLe1MW7ZFkaMn2eLq1TAY8FPpHEVLtQ1lqax623_k6n5FXjco-alv8rLrxh8o61x2487zdVuQzTjEm84FLtjv6MBz-eTT4N9AkOxo-wNKvEI0-pBE7msGtka8RzSENibY0ZBANib88mvwwaWSXNLKvVia-PJhDFo63ZSb2CPniSOb8kIP2HHzfBpx9cRxPOfiWY99APIJH480senQww69soc2g0_m2Jfm-JXni3ElGO7ctygctSnYVSPYVyAUY3ajCoHVR5fW6mxN4P7N-5fVVxLCo6wUyurx9gj99qx0sZVkJ88I8QSuVfXRA0CyLAzj1UKZ-ytRJmY4pUydlN1udnN2Cj7Rbc7B28FPaR-wpL4vctCzysrLIRcqiEecOGlEmHsrET5k4KZMxZeLJLvVllz6TXerOLnVkl3p4uY-XP8PL3bzcwcs9vJ4K7hb8vM4a7uAxr6eKiS9e8ky8xB0vccRLPPESz5DoFvy8zjHRwWNe96BgwlPKwl_KwlnKYlzKwknJiZuSjz_yB0sOSk5GlDtoRMk8lMxPyZyUbEzJ3JSescT9Y4k7xxIfjyXuHkvcM5a4fyxx51ji47HE3WOJe8qHj8vnUbB5Vtyw9Xzeajv56kINYT0tWzSN7JUBVJtCV7Z_QZn8rwWd6POCaJbqoV5ZlOulehi4iT_PzTbOrK6sriyyD80wIcl_48sWZVEtBl7Sz_OS1cvaoLZR2fAov1nuerxL_Ksbur9ba7Qq0eHW5_XCfmv_oqdz5PWxLclWTqeqLnVeqKzOdXayKOzd6vakqKfqnmx3Nzqb_jHXja5yXWUPKNdtZorG1qZfv9Mq12ZfNROfpNe_EQdJL0h6QdILkl6Q9IKkFyS9IOkFSS9IekHSC5JekPSCpHdQbkHSC5JekPSCpBckvW9Y0us_UoKkFyS9IOkFSS9IekHSC5JekPSCpBckvSDpBUkvSHpB0jsotyDpBUkvSHpB0guS3jcs6fXvtUHSU02zLLK-ZXfC3kWn7L0_v76CbfGhXFmV3amq6v4n2yW5OfMb_7_ktM1sg7qRJKPd10mpNqjUbasWGnX5lTSmhPPJ8fdH_wHjDeqwc0gAAA%3D%3D {room: undefined, roomID: undefined, participant: undefined, participantID: undefined, reconnect: undefined}"
+    },
+    {
+      "type": "warning",
+      "text": "THREE.Clock: This module has been deprecated. Please use THREE.Timer instead."
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x128c003c5400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x128c003c5400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x128c003c5400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x128c003c5400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    },
+    {
+      "type": "info",
+      "text": "signal connected {room: undefined, roomID: undefined, participant: undefined, participantID: undefined}"
+    },
+    {
+      "type": "info",
+      "text": "connected to Livekit Server edition: 0, version: 1.13.11, protocol: 18, region: , nodeId: ND_r7fZGMGuvh5r, debugInfo: , agentProtocol: 1 {room: sorborno-room, roomID: RM_8BdRkGgqk9Jr, participant: user-2826, participantID: PA_gwG8fDNTZkjx}"
+    },
+    {
+      "type": "info",
+      "text": "publishing track {room: sorborno-room, roomID: RM_8BdRkGgqk9Jr, participant: user-2826, participantID: PA_gwG8fDNTZkjx, trackID: undefined}"
+    },
+    {
+      "type": "info",
+      "text": "connection setup took 785 ms {room: sorborno-room, roomID: RM_8BdRkGgqk9Jr, participant: user-2826, participantID: PA_gwG8fDNTZkjx}"
+    },
+    {
+      "type": "info",
+      "text": "connection state changed: connecting -> connected {room: sorborno-room, roomID: RM_8BdRkGgqk9Jr, participant: user-2826, participantID: PA_gwG8fDNTZkjx}"
+    },
+    {
+      "type": "info",
+      "text": "final track stats {trackID: TR_AMv6K2X7j2oSYE, source: microphone, muted: false, enabled: false, kind: audio}"
+    }
+  ],
+  "metrics_ms": {
+    "dom_load": 246.6,
+    "token_mint": 685.64,
+    "canvas_mount": 1371.28,
+    "webrtc_connect": 16145.76,
+    "total_duration": 17500.78
+  },
+  "status": "PASS"
+}
