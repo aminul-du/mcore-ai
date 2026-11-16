@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-11-16T06:22:33.866702+00:00",
+  "signature": "MCORE-FDR-AIS-001",
+  "room": "shorborno-e2e-probe-1794810153",
+  "endpoints": {
+    "token_api": "https://sorbornoai-web.pages.dev/api/livekit/token",
+    "signaling": "wss://livekit.mcoreai.dev"
+  },
+  "metrics_ms": {
+    "token_mint": 259.25,
+    "webrtc_ice_dtls_connect": 353.46,
+    "agent_dispatch": 888.37,
+    "ttfa_roundtrip": 34.41
+  },
+  "agent_dispatched": true,
+  "agent_identity": "agent-AJ_rhRJpV2x4pvN",
+  "remote_audio_received": true,
+  "status": "PASS"
+}
