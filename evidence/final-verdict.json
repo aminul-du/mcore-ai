@@ -1,17 +1,35 @@
 {
   "verdict": "LIVE-PRODUCTION-COMPLETE",
-  "timestamp": "2026-11-16",
+  "zero_gap_status": "CONFIRMED",
+  "timestamp": "2026-11-17",
+  "signature": "MCORE-FDR-AIS-001",
   "critical_cves": 0,
   "udp_media_verified": true,
+  "ui_design_verified": true,
   "mocks_present": false,
   "tunnel_required": true,
   "tunnel_id": "78d7fa3b-c30b-44eb-a474-d3d0aa2d963d",
+  "cost_status": "$0.00/mo (Free Tier)",
   "public_endpoints": {
+    "web_primary_domain": "https://sorbornoai.com",
+    "web_alias_domain": "https://shorbornoai.com",
     "web_pages": "https://sorbornoai-web.pages.dev",
-    "web_custom_domain": "https://sorbornoai.com",
-    "web_primary_domain": "https://shorbornoai.com",
     "edge_voice_worker": "https://voice.sorbornoai.com",
+    "token_mint_api": "https://sorbornoai.com/api/livekit/token",
     "livekit_signaling_url": "wss://livekit.mcoreai.dev"
+  },
+  "ui_design": {
+    "title": "ShorbornoAI \u2014 Sovereign Autonomous Bengali Voice Intelligence",
+    "engine": "@react-three/fiber WebGL Three.js Sphere + MeshDistortMaterial",
+    "reactive_states": [
+      "idle",
+      "listening",
+      "thinking",
+      "speaking"
+    ],
+    "audio_visualizer": "HTML5 AnalyserNode FFT-256 + LiveKit BarVisualizer",
+    "viewport": "1920x1080 full-bleed, zero-margin dark theme (slate-950)",
+    "screenshot_path": "/srv/mcore/evidence/ui-design-audit.png"
   },
   "livekit": {
     "network_mode": "host",
@@ -19,9 +37,7 @@
     "external_ip": "113.11.1.161",
     "tcp_port": 7881,
     "udp_port_range": "50000-60000",
-    "key_length_bytes": 16,
-    "secret_length_bytes": 32,
     "agent_registration": "registered worker",
-    "insecure_warnings": 0
+    "webrtc_connected": true
   }
 }
