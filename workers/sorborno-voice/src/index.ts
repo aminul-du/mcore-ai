@@ -100,4 +100,37 @@ app.post('/api/v1/voice/pipeline', async (c) => {
   }
 });
 
-export default app;
+export default {
+  async fetch(request: Request, env: Env, ctx: any): Promise<Response> {
+    const url = new URL(request.url);
+    const host = url.hostname;
+
+    if (host === 'voice.sorbornoai.com' || url.pathname.startsWith('/api/v1/voice')) {
+      return app.fetch(request, env, ctx);
+    }
+
+    const pagesUrl = new URL(request.url);
+    pagesUrl.hostname = 'sorbornoai-web.pages.dev';
+    pagesUrl.protocol = 'https:';
+    pagesUrl.port = '';
+
+    const newHeaders = new Headers(request.headers);
+    newHeaders.set('Host', 'sorbornoai-web.pages.dev');
+    newHeaders.set('X-Forwarded-Host', host);
+    newHeaders.set('X-Forwarded-Proto', 'https');
+
+    const pagesReqInit: RequestInit = {
+      method: request.method,
+      headers: newHeaders,
+      redirect: 'follow',
+    };
+
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      pagesReqInit.body = request.body;
+      // @ts-ignore
+      pagesReqInit.duplex = 'half';
+    }
+
+    return fetch(new Request(pagesUrl.toString(), pagesReqInit));
+  }
+};

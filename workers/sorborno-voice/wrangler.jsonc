@@ -2,9 +2,30 @@
   "name": "sorborno-voice",
   "main": "src/index.ts",
   "compatibility_date": "2026-11-15",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "routes": [
-    { "pattern": "voice.sorbornoai.com", "custom_domain": true }
+    {
+      "pattern": "voice.sorbornoai.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "shorbornoai.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.shorbornoai.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "sorbornoai.com/*",
+      "zone_name": "sorbornoai.com"
+    },
+    {
+      "pattern": "www.sorbornoai.com/*",
+      "zone_name": "sorbornoai.com"
+    }
   ],
   "ai": {
     "binding": "AI"
