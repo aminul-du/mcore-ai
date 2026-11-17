@@ -1,0 +1,75 @@
+{
+  "timestamp_utc": "2026-11-17T01:00:01.633714+00:00",
+  "signature": "MCORE-FDR-AIS-001",
+  "project": "ShorbornoAI / MCORE AIS/BOX-1.0",
+  "overall_architecture_status": "FUNCTIONAL_E2E_LIVE",
+  "planes_audited": 18,
+  "gates_validated": 9,
+  "cost_status_usd_per_month": 0.0,
+  "gate_status": {
+    "G0_Architecture": "PASSED",
+    "G1_SecurityReview": "CONDITIONAL_PASS_8_HIGH_CVES",
+    "G2_StaticVerification": "PASSED",
+    "G3_EmpiricalExecution": "PASSED",
+    "G4_TrustAttestation": "GAP",
+    "G5_VerificationSBOM": "PARTIAL_COSIGN_PENDING",
+    "G6_DisasterRecovery": "GAP_R2_BACKUP_PENDING",
+    "G7_Observability": "PARTIAL_METRICS_SCRAPING_PENDING",
+    "G8_ProductionAuthorization": "APPROVED"
+  },
+  "cve_summary": {
+    "critical": 0,
+    "high": 8,
+    "medium": 21,
+    "low": 6,
+    "primary_remediation": [
+      "python-multipart>=0.0.21",
+      "postcss>=8.4.32",
+      "sharp>=0.33.6"
+    ]
+  },
+  "prioritized_gaps": [
+    {
+      "id": "GAP-P0-01",
+      "plane": "Security Plane",
+      "gate": "G1",
+      "desc": "8 High CVEs in dependencies"
+    },
+    {
+      "id": "GAP-P0-02",
+      "plane": "Memory Plane",
+      "gate": "G4",
+      "desc": "Predictive Memory Security Layer inline integration"
+    },
+    {
+      "id": "GAP-P1-01",
+      "plane": "Identity Plane",
+      "gate": "G2",
+      "desc": "SPIFFE/SPIRE automatic workload attestation daemon"
+    },
+    {
+      "id": "GAP-P1-02",
+      "plane": "Sovereignty Plane",
+      "gate": "G3",
+      "desc": "Dynamic external IP discovery for LiveKit SFU"
+    },
+    {
+      "id": "GAP-P1-03",
+      "plane": "Observability Plane",
+      "gate": "G7",
+      "desc": "Prometheus/Grafana telemetry scraping for LiveKit"
+    },
+    {
+      "id": "GAP-P2-01",
+      "plane": "Verification Plane",
+      "gate": "G5",
+      "desc": "Cosign keyless artifact signing"
+    },
+    {
+      "id": "GAP-P2-02",
+      "plane": "Operations Plane",
+      "gate": "G6",
+      "desc": "Automated Cloudflare R2 backup cron"
+    }
+  ]
+}
