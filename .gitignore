@@ -20,3 +20,4 @@ venv/
 evidence/sbom.cdx.json
 secrets/
 *.env
+backups/
