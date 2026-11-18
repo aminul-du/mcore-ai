@@ -1,0 +1,11 @@
+.env
+.env.*
+.venv/
+.cache/
+models/
+*.zip
+*.bak
+__pycache__/
+*.pyc
+*.wav
+*.webm

@@ -1,0 +1,16 @@
+MCORE AIS VOICE CONSOLE v0.3 — QUICK START
+
+1. Copy ZIP to ~/Downloads.
+2. As your normal Linux user:
+   sudo install -d -o "$USER" -g "$(id -gn)" -m 0750 /srv/mcore/apps/voice-console
+   cp ~/Downloads/mcore_voice_console_v03.zip /srv/mcore/apps/voice-console/
+   cd /srv/mcore/apps/voice-console
+   unzip -q mcore_voice_console_v03.zip
+   cd mcore_voice_console_v03
+3. Verify: command -v gemini && gemini --version
+4. Start: python3 app/mcore_voice_console.py
+5. Browse: http://127.0.0.1:7860
+6. Stop: Ctrl+C
+
+No pip install and no venv are required for this standard-library edition.
+Do not run as root. Do not expose the port outside localhost.

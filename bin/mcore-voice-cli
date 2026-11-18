@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+HOST="127.0.0.1"
+PORT="${MCORE_PORT:-7860}"
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: mcore-voice-cli \"<your prompt here>\""
+    exit 1
+fi
+
+PROMPT="$*"
+
+# Safely encode the prompt as JSON using Python
+JSON_PAYLOAD=$(python3 -c 'import json,sys; print(json.dumps({"prompt": sys.argv[1]}))' "$PROMPT")
+
+echo "Sending prompt to Gemini via MCORE Voice Console..."
+RESPONSE=$(curl -fsS --max-time 60 -X POST "http://${HOST}:${PORT}/api/prompt" \
+    -H "Content-Type: application/json" -H "Origin: http://${HOST}:${PORT}" \
+    -d "$JSON_PAYLOAD")
+
+# Extract stdout and handle errors safely without f-string escaping issues
+echo "$RESPONSE" | python3 -c '
+import json, sys
+try:
+    data = json.load(sys.stdin)
+    rc = data.get("returncode")
+    if rc == 0:
+        print(data.get("stdout", "").strip())
+    else:
+        err = data.get("stderr", "")
+        print(f"ERROR (code {rc}):\n{err}")
+except Exception as e:
+    print(f"Failed to parse response: {e}")
+'

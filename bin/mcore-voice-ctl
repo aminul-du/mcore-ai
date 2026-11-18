@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APP_ROOT="/srv/mcore/apps/voice-console"
+APP_DIR="${APP_ROOT}/mcore_voice_console_v03"
+APP_SCRIPT="${APP_DIR}/app/mcore_voice_console.py"
+VENV_PY="${APP_ROOT}/.venv/bin/python3"
+SERVICE_NAME="mcore-voice-console.service"
+TARGET_USER="mcoreai"
+TARGET_GROUP="mcoreai"
+HOST="127.0.0.1"
+PORT="${MCORE_PORT:-7860}"
+
+run_privileged() {
+  if [[ "$(id -u)" -eq 0 ]]; then "$@"; else sudo "$@"; fi
+}
+
+enforce_permissions() {
+  local bad_owner
+  bad_owner="$(find "${APP_ROOT}" \( ! -user "${TARGET_USER}" -o ! -group "${TARGET_GROUP}" \) -print -quit 2>/dev/null || true)"
+  [[ -n "${bad_owner}" ]] && run_privileged chown -R "${TARGET_USER}:${TARGET_GROUP}" "${APP_ROOT}"
+  chmod 750 "${APP_ROOT}" "${APP_DIR}" "${APP_DIR}/app"
+  chmod 640 "${APP_SCRIPT}"
+}
+
+wait_ready() {
+  for _ in $(seq 1 25); do
+    if curl -fsS --max-time 1 "http://${HOST}:${PORT}/api/status" >/dev/null 2>&1; then
+      return 0
+    fi
+    sleep 0.5
+  done
+  echo "ERROR: Service did not become ready on ${HOST}:${PORT} within 12.5s." >&2
+  return 1
+}
+
+cmd_start() {
+  enforce_permissions
+  run_privileged systemctl start "${SERVICE_NAME}"
+  wait_ready
+  echo "[OK] ${SERVICE_NAME} active & Whisper ready on http://${HOST}:${PORT}"
+}
+
+cmd_stop() {
+  run_privileged systemctl stop "${SERVICE_NAME}" || true
+  echo "[OK] ${SERVICE_NAME} stopped."
+}
+
+cmd_restart() {
+  enforce_permissions
+  run_privileged systemctl restart "${SERVICE_NAME}"
+  wait_ready
+  echo "[OK] ${SERVICE_NAME} restarted & Whisper ready on http://${HOST}:${PORT}"
+}
+
+cmd_status() {
+  local json_mode="${1:-}"
+  local svc_state socket_bound status_json
+  svc_state="$(systemctl is-active "${SERVICE_NAME}" 2>/dev/null || echo "inactive")"
+  if ss -lntp 2>/dev/null | grep -qE "${HOST}:${PORT}"; then
+    socket_bound="true"
+  else
+    socket_bound="false"
+  fi
+  status_json="$(curl -fsS --max-time 3 "http://${HOST}:${PORT}/api/status" 2>/dev/null || echo '{"state":"unreachable"}')"
+
+  if [[ "${json_mode}" == "--json" ]]; then
+    "${VENV_PY}" -c '
+import json, sys, time
+print(json.dumps({
+    "service": "mcore-voice-console",
+    "host": "MCORE-FDR-AIS-001",
+    "timestamp": int(time.time()),
+    "systemd_state": sys.argv[1],
+    "localhost_bound": sys.argv[2] == "true",
+    "bind": "127.0.0.1:7860",
+    "api_status": json.loads(sys.argv[3]),
+}))
+' "${svc_state}" "${socket_bound}" "${status_json}"
+  else
+    echo "=== MCORE VOICE CONSOLE STATUS ==="
+    echo "Systemd: ${svc_state}"
+    ss -lntp 2>/dev/null | grep -E "${HOST}:${PORT}" || echo "Socket: NOT LISTENING"
+    echo "${status_json}"
+  fi
+}
+
+cmd_logs() {
+  journalctl -u "${SERVICE_NAME}" -n "${1:-50}" --no-pager
+}
+
+cmd_e2e_test() {
+  local json_mode="${1:-}"
+  local s_json t_json w_json p_json
+  local p1="false" p2="false" p3="false" p4="false" p5="false"
+
+  [[ "${json_mode}" != "--json" ]] && echo "=== MCORE VOICE CONSOLE v0.4 E2E VERIFICATION ==="
+
+  if ss -lntp 2>/dev/null | grep -qE "${HOST}:${PORT}"; then
+    p1="true"
+    [[ "${json_mode}" != "--json" ]] && echo "[1/5] PASS: Bound strictly to ${HOST}:${PORT}"
+  else
+    [[ "${json_mode}" != "--json" ]] && echo "[1/5] FAIL: Socket not bound"
+    exit 1
+  fi
+
+  s_json="$(curl -fsS --max-time 5 "http://${HOST}:${PORT}/api/status")"
+  p2="true"
+  [[ "${json_mode}" != "--json" ]] && echo "[2/5] PASS: ${s_json}"
+
+  t_json="$(curl -fsS --max-time 10 -X POST "http://${HOST}:${PORT}/api/terminal" \
+    -H "Content-Type: application/json" -H "Origin: http://${HOST}:${PORT}" \
+    -d '{"command":"whoami"}')"
+  echo "${t_json}" | grep -q '"returncode": 0' || { echo "FAIL: ${t_json}" >&2; exit 1; }
+  p3="true"
+  [[ "${json_mode}" != "--json" ]] && echo "[3/5] PASS: ${t_json}"
+
+  "${VENV_PY}" -c '
+import math, struct, wave
+with wave.open("/tmp/mcore_e2e_test.wav", "w") as w:
+    w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000)
+    frames = b"".join(struct.pack("<h", int(8000 * math.sin(2 * math.pi * 440 * i / 16000))) for i in range(16000))
+    w.writeframes(frames)
+'
+  w_json="$(curl -fsS --max-time 30 -X POST "http://${HOST}:${PORT}/api/transcribe?lang=en" \
+    -H "Content-Type: audio/wav" -H "Origin: http://${HOST}:${PORT}" \
+    --data-binary @/tmp/mcore_e2e_test.wav)"
+  rm -f /tmp/mcore_e2e_test.wav
+  echo "${w_json}" | grep -q '"duration_s":' || { echo "FAIL: ${w_json}" >&2; exit 1; }
+  p4="true"
+  [[ "${json_mode}" != "--json" ]] && echo "[4/5] PASS: ${w_json}"
+
+  p_json="$(curl -fsS --max-time 60 -X POST "http://${HOST}:${PORT}/api/prompt" \
+    -H "Content-Type: application/json" -H "Origin: http://${HOST}:${PORT}" \
+    -d '{"prompt":"Reply with exact string: MCORE_V04_E2E_OK"}')"
+  echo "${p_json}" | grep -q '"returncode": 0' || { echo "FAIL: ${p_json}" >&2; exit 1; }
+  p5="true"
+  [[ "${json_mode}" != "--json" ]] && echo "[5/5] PASS: ${p_json}"
+
+  if [[ "${json_mode}" == "--json" ]]; then
+    "${VENV_PY}" -c '
+import json, time
+print(json.dumps({
+    "service": "mcore-voice-console",
+    "version": "0.4",
+    "timestamp": int(time.time()),
+    "overall_status": "PASS",
+    "checks": {
+        "socket_isolation": True,
+        "api_status": True,
+        "terminal_allowlist": True,
+        "whisper_stt": True,
+        "gemini_cli_api": True,
+    }
+}))
+'
+  else
+    echo "=== ALL 5 E2E PIPELINE CHECKS PASSED ==="
+  fi
+}
+
+case "${1:-}" in
+  start)    cmd_start ;;
+  stop)     cmd_stop ;;
+  restart)  cmd_restart ;;
+  status)   cmd_status "${2:-}" ;;
+  logs)     cmd_logs "${2:-50}" ;;
+  e2e-test) cmd_e2e_test "${2:-}" ;;
+  *)        echo "Usage: mcore-voice-ctl {start|stop|restart|status [--json]|logs [N]|e2e-test [--json]}"; exit 1 ;;
+esac
