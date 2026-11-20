@@ -1,0 +1,50 @@
+Audit: MCORE-SHORBORNO-RECON-001
+UTC: 20261120T191155Z
+Host: MCORE-FDR-AIS-001
+Kernel: Linux 6.18.58.1-microsoft-standard-WSL2
+
+=== GIT HEAD ===
+02a1adaf89b22eb2a92be34d32d4ae8c1398b3d5
+
+=== GIT STATUS ===
+ M apps/web/package.json
+ M apps/web/pnpm-lock.yaml
+ m mcore365
+ M pnpm-lock.yaml
+ M workspace-360/frontend/src/app/store.ts
+ M workspace-360/frontend/src/components/AudioToolbar.tsx
+?? AIS-PRO/
+?? apps/voice-console/local_storage/
+?? apps/web/components/AudioControlToolbar.tsx
+?? apps/web/store/
+?? docs/AIS-Strict-Fabric-Stage-360Drive/
+?? evidence/shorbornoai-reconciliation/
+?? scripts/mcore-shorborno-recon.sh
+?? scripts/mcore-shorborno-recon.sh.authfix.20261120T191155Z
+?? scripts/mcore-shorborno-recon.sh.backup.20261120T185904Z
+?? scripts/provision-sorborno-subdomains.sh
+
+=== RECENT HISTORY ===
+02a1adaf89b22eb2a92be34d32d4ae8c1398b3d5 2026-11-19T04:10:45+06:00 feat(voice-console): upgrade v0.7 with FastAPI, xterm.js PTY WebSocket, local_storage file manager, and 3-column ROI UI
+d2e0be3b8f8191c61c8a760a0b87e7e5f847be4a 2026-11-19T02:05:07+06:00 feat(workspace-360): complete monorepo deployment with Next.js UI, xterm CloudShell, ShorbornoAI AudioToolbar, and FastAPI control plane
+b9ddbcd16631026552403f0570850a162c6da795 2026-11-18T13:39:48+06:00 feat(voice-console): secure v0.6 release with Cloudflare Tunnel & origin protection for ais.mcorecare.com
+07e633a852ccdc503f4579854bcdbd9cb10a113f 2026-11-18T11:11:39+06:00 chore(security): untrack sandbox env template and ignore backups directory [MCORE-FDR-AIS-001]
+6b1eb23dd5982131e859f90677298808613a4a12 2026-11-17T07:45:14+06:00 feat(runtime): standardize on Python 3.14.0 across ecosystem and purge legacy versions [MCORE-FDR-AIS-001]
+79a9720811ef76edf92dbbd698d1ff64c38e6395 2026-11-17T07:13:11+06:00 feat(ui-e2e): live UI design enhancement, automated zero-gap runbook, and executive summary [MCORE-FDR-AIS-001]
+51224afedf968ddab71ec68605d9f0401f878fd6 2026-11-17T07:00:20+06:00 docs(audit): identify comprehensive project gaps across 18 planes and 9 gates [MCORE-FDR-AIS-001]
+566792e516a9c934b71db2e0d2ea18837446e343 2026-11-17T06:54:02+06:00 feat(e2e): update verified browser-e2e verdict and evidence screenshot [MCORE-FDR-AIS-001]
+e384ddaac4d56821784752b256d13ee487a4be3e 2026-11-17T06:27:25+06:00 feat(deploy): execute cf-e2e-deploy with zero-cost edge routing and live verification [MCORE-FDR-AIS-001]
+44d9870265a82571cd82faca14c3bd9d73f4a5ff 2026-11-16T22:30:39+06:00 feat(browser-e2e): implement Playwright E2E browser verification and evidence collection [MCORE-FDR-AIS-001]
+2800790b8022577c58eef41098976a61a3e44662 2026-11-16T12:24:24+06:00 feat(webrtc): implement E2E WebRTC probe and add POST LiveKit token endpoint [MCORE-FDR-AIS-001]
+74db696328a4b8dde5fa63cd0fcd0ea8289ded66 2026-11-16T01:18:52+06:00 release(shorbornoai): deploy v1.0.0 production edge and sovereign WebRTC stack
+4c51909c7b0c4ae3049f0caca498ca5a7653a73e 2026-11-12T22:53:57+06:00 refactor(security): quarantine .env secrets and consolidate mcp-gateway & cf-ai-worker into mcoresec/apps
+16b2e3b92bfb137bf136e0d9badf569640792c7d 2026-11-12T22:33:17+06:00 docs(ais-docs): sync platform audit executive summary, daily confirmation, and research dossiers
+3aff0bcbc7a19cecd5f23e37770afdb54dbcb9bc 2026-11-08T23:36:03+06:00 feat(academic): complete AIS-DU-PMICS-PROJECT-SBOX 6-pillar suite, ais-docs portal, and shorborno.ai domain mapping
+=== SYSTEMD ===
+active
+enabled
+
+=== TOOLCHAIN ===
+v26.13.0
+11.28.11
+Python 3.14.0

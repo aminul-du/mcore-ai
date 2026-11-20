@@ -1,0 +1,461 @@
+
+#!/usr/bin/env bash
+# ============================================================
+# MCORE-SHORBORNO-RECON-001
+# Unified Local + Cloudflare Infrastructure Audit
+# Owner: AIS
+# Mode: READ-ONLY
+# ============================================================
+
+set -Eeuo pipefail
+umask 077
+
+ROOT="/srv/mcore"
+SCRIPT_DIR="$ROOT/scripts"
+BASE="$ROOT/evidence/shorbornoai-reconciliation"
+ZONE="sorbornoai.com"
+API="https://api.cloudflare.com/client/v4"
+STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+OUT="$BASE/$STAMP"
+TMP="$(mktemp -d)"
+
+trap 'rm -rf "$TMP"' EXIT
+
+log() { echo "[$(date -u +%H:%M:%S)] $*"; }
+die() { echo "ERROR: $*" >&2; exit 1; }
+
+for cmd in curl jq python3 git; do
+    command -v "$cmd" >/dev/null || die "$cmd is required"
+done
+
+[[ -d "$ROOT" ]] || die "Missing $ROOT"
+
+mkdir -p "$SCRIPT_DIR" "$OUT"/{
+01-local-observed-state,
+02-cloudflare-live-state,
+03-reconciliation,
+04-security-audit,
+05-final-report
+}
+
+chmod 700 "$OUT"
+
+L="$OUT/01-local-observed-state"
+C="$OUT/02-cloudflare-live-state"
+R="$OUT/03-reconciliation"
+F="$OUT/05-final-report"
+
+log "MCORE-SHORBORNO-RECON-001 starting"
+
+# ------------------------------------------------------------
+# 1. LOCAL OBSERVED STATE
+# ------------------------------------------------------------
+
+log "Collecting local infrastructure"
+
+{
+    echo "Audit: MCORE-SHORBORNO-RECON-001"
+    echo "UTC: $STAMP"
+    echo "Host: $(hostname)"
+    echo "Kernel: $(uname -sr)"
+
+    echo
+    echo "=== GIT HEAD ==="
+    git -C "$ROOT" rev-parse HEAD || true
+
+    echo
+    echo "=== GIT STATUS ==="
+    git -C "$ROOT" status --short || true
+
+    echo
+    echo "=== RECENT HISTORY ==="
+    git -C "$ROOT" log -15 \
+        --date=iso-strict \
+        --pretty=format:'%H %ad %s' || true
+
+    echo
+    echo "=== SYSTEMD ==="
+    systemctl is-active shorborno-agent.service 2>/dev/null || true
+    systemctl is-enabled shorborno-agent.service 2>/dev/null || true
+
+    echo
+    echo "=== TOOLCHAIN ==="
+    node --version 2>/dev/null || true
+    pnpm --version 2>/dev/null || true
+    python3 --version
+    wrangler --version 2>/dev/null || true
+
+} > "$L/local-system-report.txt"
+
+find "$ROOT" -maxdepth 5 -type f \
+    \( -path '*/workers/*' \
+       -o -path '*/apps/web/*' \
+       -o -path '*/shorborno*' \
+       -o -path '*/scripts/*' \
+       -o -path '*/docs/*' \) \
+    ! -path '*/node_modules/*' \
+    ! -path '*/.git/*' \
+    ! -path '*/venv/*' \
+    ! -name '.env*' \
+    ! -iname '*secret*' \
+    -printf '%P\n' 2>/dev/null |
+    sort > "$L/local-file-inventory.txt"
+
+# Local Worker AI and architecture indicators
+grep -RInE \
+    'AI\.run|binding.*AI|melotts|whisper|llama|LiveKit|sorbornoai-web' \
+    "$ROOT/workers" "$ROOT/apps" "$ROOT/shorborno-agent" \
+    --exclude-dir=node_modules \
+    --exclude-dir=venv \
+    --exclude='*.lock' \
+    2>/dev/null > "$L/architecture-indicators.txt" || true
+
+# Configuration file hashes, never copy secrets
+find "$ROOT" -maxdepth 5 -type f \
+    \( -name 'wrangler.jsonc' \
+       -o -name 'wrangler.toml' \
+       -o -name 'package.json' \
+       -o -name 'requirements.txt' \) \
+    ! -path '*/node_modules/*' \
+    ! -path '*/.git/*' \
+    -print0 |
+    xargs -0 -r sha256sum > "$L/configuration-hashes.txt"
+
+# ------------------------------------------------------------
+# 2. CLOUDFLARE AUTHENTICATION
+# ------------------------------------------------------------
+
+log "Cloudflare read-only inventory"
+
+read -rp "Cloudflare Account ID: " CF_ACCOUNT
+[[ -n "$CF_ACCOUNT" ]] || die "Account ID required"
+
+read -rsp "Cloudflare read-only API Token: " CF_TOKEN
+echo
+[[ -n "$CF_TOKEN" ]] || die "Token required"
+
+CURL_CONFIG="$TMP/cloudflare.conf"
+
+printf 'header = "Authorization: Bearer %s"\n' \
+    "$CF_TOKEN" > "$CURL_CONFIG"
+
+chmod 600 "$CURL_CONFIG"
+unset CF_TOKEN
+
+# All API calls below are GET requests.
+cf_get() {
+    local endpoint="$1"
+    local filename="$2"
+    local code
+
+    code=$(curl --silent --show-error \
+        --config "$CURL_CONFIG" \
+        --output "$filename" \
+        --write-out '%{http_code}' \
+        "$API$endpoint" 2>/dev/null || true)
+
+    if [[ "$code" != "200" ]]; then
+        jq -n \
+            --arg endpoint "$endpoint" \
+            --arg code "$code" \
+            '{audit_error:true,endpoint:$endpoint,http_status:$code}' \
+            > "$filename"
+        log "API collection issue: $endpoint (HTTP $code)"
+        return 0
+    fi
+
+    if ! jq -e '.success == true' "$filename" >/dev/null 2>&1; then
+        log "API returned unsuccessful result: $endpoint"
+    fi
+}
+
+# ------------------------------------------------------------
+# 3. CLOUDFLARE LIVE INVENTORY
+# ------------------------------------------------------------
+
+log "Collecting Workers, Pages, D1 and KV"
+
+cf_get "/accounts/$CF_ACCOUNT" \
+    "$C/account.json"
+
+cf_get "/accounts/$CF_ACCOUNT/workers/scripts" \
+    "$C/workers.json"
+
+cf_get "/accounts/$CF_ACCOUNT/pages/projects" \
+    "$C/pages-projects.json"
+
+cf_get "/accounts/$CF_ACCOUNT/d1/database" \
+    "$C/d1-databases.json"
+
+cf_get "/accounts/$CF_ACCOUNT/storage/kv/namespaces" \
+    "$C/kv-namespaces.json"
+
+cf_get "/zones?name=$ZONE" \
+    "$C/zones.json"
+
+# ------------------------------------------------------------
+# 4. DNS AND ROUTES
+# ------------------------------------------------------------
+
+ZONE_ID=$(jq -r \
+    '.result[0].id // empty' \
+    "$C/zones.json" 2>/dev/null || true)
+
+if [[ -n "$ZONE_ID" ]]; then
+
+    cf_get "/zones/$ZONE_ID" \
+        "$C/zone-details.json"
+
+    cf_get "/zones/$ZONE_ID/dns_records?per_page=500" \
+        "$C/dns-records.json"
+
+    cf_get "/zones/$ZONE_ID/workers/routes" \
+        "$C/worker-routes.json"
+
+else
+    log "Zone inventory unavailable; check Zone Read permission."
+fi
+
+# ------------------------------------------------------------
+# 5. WORKER DEPLOYMENT INVENTORY
+# ------------------------------------------------------------
+
+mkdir -p "$C/worker-deployments"
+
+jq -r '.result[]?.id // empty' "$C/workers.json" \
+    2>/dev/null |
+while IFS= read -r worker; do
+
+    safe=$(printf '%s' "$worker" |
+        tr -cd 'A-Za-z0-9._-')
+
+    [[ -n "$safe" ]] || continue
+
+    cf_get \
+        "/accounts/$CF_ACCOUNT/workers/scripts/$worker/deployments" \
+        "$C/worker-deployments/$safe.json"
+
+done
+
+# ------------------------------------------------------------
+# 6. RECONCILIATION SUMMARY
+# ------------------------------------------------------------
+
+python3 - "$OUT" "$STAMP" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+out = Path(sys.argv[1])
+stamp = sys.argv[2]
+cf = out / "02-cloudflare-live-state"
+rec = out / "03-reconciliation"
+
+def load(name):
+    try:
+        return json.loads((cf / name).read_text())
+    except Exception:
+        return {}
+
+def results(name):
+    data = load(name)
+    return data.get("result", []) if isinstance(data, dict) else []
+
+workers = results("workers.json")
+pages = results("pages-projects.json")
+dns = results("dns-records.json")
+routes = results("worker-routes.json")
+d1 = results("d1-databases.json")
+kv = results("kv-namespaces.json")
+
+summary = {
+    "audit_id": "MCORE-SHORBORNO-RECON-001",
+    "collected_utc": stamp,
+    "mode": "read-only",
+    "workers": [
+        {"name": x.get("id"),
+         "created_on": x.get("created_on"),
+         "modified_on": x.get("modified_on")}
+        for x in workers
+    ],
+    "pages": [
+        {"name": x.get("name"),
+         "subdomain": x.get("subdomain")}
+        for x in pages
+    ],
+    "dns": [
+        {"name": x.get("name"),
+         "type": x.get("type"),
+         "content": x.get("content"),
+         "proxied": x.get("proxied")}
+        for x in dns
+    ],
+    "routes": [
+        {"pattern": x.get("pattern"),
+         "script": x.get("script")}
+        for x in routes
+    ],
+    "d1": [
+        {"name": x.get("name"),
+         "uuid": x.get("uuid")}
+        for x in d1
+    ],
+    "kv": [
+        {"name": x.get("title"),
+         "id": x.get("id")}
+        for x in kv
+    ]
+}
+
+(rec / "cloudflare-resource-summary.json").write_text(
+    json.dumps(summary, indent=2) + "\n"
+)
+
+errors = []
+
+for path in cf.rglob("*.json"):
+    try:
+        data = json.loads(path.read_text())
+        if data.get("audit_error"):
+            errors.append({
+                "file": str(path.relative_to(out)),
+                "status": data.get("http_status"),
+                "endpoint": data.get("endpoint")
+            })
+    except Exception:
+        errors.append({"file": str(path.relative_to(out)),
+                       "error": "Invalid JSON"})
+
+(rec / "collection-errors.json").write_text(
+    json.dumps(errors, indent=2) + "\n"
+)
+PY
+
+# ------------------------------------------------------------
+# 7. LOCAL CLOUDFLARE AI DEVELOPMENT GUIDE
+# ------------------------------------------------------------
+
+cat > "$F/cloudflare-workers-ai-local-dev.md" <<'EOF'
+# ShorbornoAI - Cloudflare Workers AI Local Development
+
+## Preferred architecture
+
+Use Wrangler local development with a remote Workers AI binding.
+
+Existing Worker binding:
+AI
+
+Recommended development configuration:
+
+{
+  "ai": {
+    "binding": "AI",
+    "remote": true
+  }
+}
+
+Keep the existing production configuration unchanged until
+AIS approves the configuration change.
+
+## Local execution
+
+From the existing Worker directory:
+
+pnpm exec wrangler dev
+
+The Worker executes locally while the AI binding accesses
+Cloudflare's remote Workers AI service.
+
+## Important
+
+- Remote AI inference can incur usage charges.
+- Do not put Cloudflare tokens in frontend code.
+- Do not commit credentials.
+- Do not expose secrets through logs.
+- Do not change production routes during local testing.
+- Do not perform inference automatically during infrastructure audit.
+
+## Alternative
+
+A backend-only application can use the Workers AI REST API
+with Account ID and a dedicated Workers AI API token.
+
+This is an external API workflow and should be separately
+approved for usage and cost.
+EOF
+
+# ------------------------------------------------------------
+# 8. FINAL REPORT
+# ------------------------------------------------------------
+
+cat > "$F/executive-summary.md" <<EOF
+# ShorbornoAI Infrastructure Audit
+
+Audit ID: MCORE-SHORBORNO-RECON-001
+UTC: $STAMP
+
+Mode: READ-ONLY
+
+Local inventory: collected
+Cloudflare inventory: attempted
+AI inference test: NOT RUN
+Deployment changes: NONE
+DNS changes: NONE
+Route changes: NONE
+Database changes: NONE
+
+Review:
+
+- ../03-reconciliation/cloudflare-resource-summary.json
+- ../03-reconciliation/collection-errors.json
+- ../01-local-observed-state/
+- ../02-cloudflare-live-state/
+- cloudflare-workers-ai-local-dev.md
+
+IMPORTANT:
+An API collection failure is not proof that a resource
+is absent. Missing permissions and unavailable endpoints
+must be investigated separately.
+
+This audit does not prove end-to-end production health.
+EOF
+
+cat > "$F/next-steps.md" <<'EOF'
+# Next Steps
+
+1. Review Cloudflare collection errors.
+2. Compare local Worker source with deployment history.
+3. Verify Pages production ownership.
+4. Verify DNS and Worker routes.
+5. Review Workers AI usage and account limits.
+6. Prepare a separate AIS-approved implementation plan.
+
+No automatic remediation is authorized.
+EOF
+
+# ------------------------------------------------------------
+# 9. COMPLETION
+# ------------------------------------------------------------
+
+log "Audit inventory completed"
+
+echo
+echo "============================================"
+echo " MCORE-SHORBORNO-RECON-001"
+echo "============================================"
+echo "Workspace: $OUT"
+echo
+echo "Main report:"
+echo "$F/executive-summary.md"
+echo
+echo "Cloudflare summary:"
+echo "$R/cloudflare-resource-summary.json"
+echo
+echo "Collection errors:"
+echo "$R/collection-errors.json"
+echo
+echo "Workers AI guide:"
+echo "$F/cloudflare-workers-ai-local-dev.md"
+echo
+echo "READ-ONLY AUDIT: No production changes."
+echo "============================================"

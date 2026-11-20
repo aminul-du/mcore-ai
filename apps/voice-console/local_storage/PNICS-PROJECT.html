@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Predictive Memory Security Assessment for AI Systems — ShorbornoAI</title>
+<meta name="description" content="A Memory Risk Assessment Framework Using the ShorbornoAI Bengali Knowledge Platform. PMICS, Department of CSE, University of Dhaka. Proposed research concept.">
+<!-- PptxGenJS for PowerPoint Export -->
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/PptxGenJS@3.12.0/dist/pptxgen.bundle.js"></script>
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; }
+a { color: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============ VARIABLES ============ */
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --text: #191817;
+  --text-muted: #5a5652;
+  --text-subtle: #8a857f;
+  --accent: #0f4c75;
+  --accent-soft: #e6eef5;
+  --border: #e8e4dd;
+  --border-strong: #d4cec4;
+  --code-bg: #f2eee7;
+
+  --risk-low: #0f7a4f; --risk-low-bg: #e6f4ed;
+  --risk-medium: #a16207; --risk-medium-bg: #fef3c7;
+  --risk-high: #b91c1c; --risk-high-bg: #fee2e2;
+  --risk-critical: #7f1d1d; --risk-critical-bg: #fecaca;
+
+  --radius: 8px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Noto Sans Bengali", "Hind Siliguri", sans-serif;
+  --font-display: "Iowan Old Style", "Charter", "Charter BT", Georgia, "Noto Serif Bengali", serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --header-bg: rgba(250,249,246,0.88);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121110;
+    --surface: #1b1917;
+    --text: #eeeae3;
+    --text-muted: #a8a29a;
+    --text-subtle: #7a756e;
+    --accent: #7eb4dc;
+    --accent-soft: #1c2a37;
+    --border: #2b2824;
+    --border-strong: #3d3a34;
+    --code-bg: #24221e;
+
+    --risk-low: #6ee7b7; --risk-low-bg: #062a1f;
+    --risk-medium: #fbbf24; --risk-medium-bg: #2a1f06;
+    --risk-high: #fca5a5; --risk-high-bg: #2a0a0a;
+    --risk-critical: #f87171; --risk-critical-bg: #3a0505;
+
+    --header-bg: rgba(18,17,16,0.88);
+  }
+}
+
+/* ============ BODY ============ */
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+body[data-lang="bn"] {
+  font-family: "Noto Sans Bengali", "Hind Siliguri", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.85;
+}
+body[data-lang="bn"] h1, body[data-lang="bn"] h2, body[data-lang="bn"] h3 {
+  font-family: "Noto Serif Bengali", "Noto Sans Bengali", serif;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============ SKIP LINK ============ */
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--accent); color: #fff;
+  padding: 10px 16px; z-index: 200;
+  text-decoration: none; font-size: 14px;
+}
+.skip-link:focus { left: 16px; top: 16px; }
+
+/* ============ PROGRESS BAR ============ */
+.progress-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; z-index: 100; pointer-events: none;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: var(--accent);
+  transition: width 80ms linear;
+}
+
+/* ============ HEADER ============ */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--header-bg);
+  backdrop-filter: blur(14px) saturate(1.6);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+  height: 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--text);
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+}
+.brand-mark {
+  color: var(--accent);
+  font-size: 18px;
+}
+.brand-sub {
+  color: var(--text-subtle);
+  font-weight: 400;
+  font-size: 12px;
+  margin-left: 2px;
+}
+.primary-nav {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  flex: 1;
+  min-width: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.primary-nav::-webkit-scrollbar { display: none; }
+.primary-nav a {
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: background 120ms, color 120ms;
+}
+.primary-nav a:hover { background: var(--accent-soft); color: var(--accent); }
+.primary-nav a.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ============ LANGUAGE TOGGLE ============ */
+.lang-toggle {
+  display: inline-flex;
+  background: var(--code-bg);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.lang-toggle button {
+  border: 0;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: background 120ms, color 120ms;
+}
+.lang-toggle button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============ NEW EXPORT BUTTONS ============ */
+.btn-export {
+  border: 0;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 120ms;
+  white-space: nowrap;
+}
+.btn-export:hover { opacity: 0.9; }
+.btn-pdf { background: #b91c1c; } /* Red */
+.btn-ppt { background: #d97706; } /* Orange */
+
+/* ============ PRESENT BUTTON ============ */
+.btn-present {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  transition: background 120ms, border-color 120ms, color 120ms;
+  white-space: nowrap;
+}
+.btn-present:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ============ MAIN / SECTIONS ============ */
+main { padding-bottom: 80px; }
+.section {
+  padding: 80px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.section + .section { border-top: 1px solid var(--border); }
+.section-header { margin-bottom: 32px; }
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-subtle);
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text);
+}
+.section h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 32px 0 10px;
+  color: var(--text);
+}
+.section h4 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  margin: 24px 0 8px;
+  color: var(--text);
+}
+.section p {
+  margin: 12px 0;
+  color: var(--text);
+}
+.section p.lead {
+  font-size: 18px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.section ul, .section ol {
+  padding-left: 22px;
+  margin: 12px 0;
+}
+.section li {
+  margin: 8px 0;
+}
+
+/* ============ BADGES ============ */
+.badge-proposed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--risk-medium-bg);
+  color: var(--risk-medium);
+  border: 1px solid var(--risk-medium);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ============ COVER ============ */
+.cover {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  text-align: left;
+}
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.cover h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5.5vw, 52px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.cover-sub {
+  font-size: clamp(17px, 2vw, 20px);
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 40px;
+  max-width: 700px;
+}
+.cover-meta {
+  display: grid;
+  gap: 6px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.cover-meta .meta-strong { font-weight: 600; }
+.cover-authors {
+  display: grid;
+  gap: 4px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.cover-authors .authors-label {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.cover-notice {
+  margin-top: 32px;
+}
+
+/* ============ SEQUENCE FLOW ============ */
+.sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  align-items: center;
+}
+.sequence li {
+  position: relative;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+}
+.sequence li:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  font-size: 14px;
+}
+
+/* ============ RISK LEVELS ============ */
+.risk-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+.risk-badge {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.risk-badge.low { color: var(--risk-low); background: var(--risk-low-bg); border-color: var(--risk-low); }
+.risk-badge.medium { color: var(--risk-medium); background: var(--risk-medium-bg); border-color: var(--risk-medium); }
+.risk-badge.high { color: var(--risk-high); background: var(--risk-high-bg); border-color: var(--risk-high); }
+.risk-badge.critical { color: var(--risk-critical); background: var(--risk-critical-bg); border-color: var(--risk-critical); }
+
+/* ============ CHIPS ============ */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+.chip {
+  padding: 6px 14px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ============ FORMULA BLOCK ============ */
+.formula {
+  margin: 20px 0;
+  padding: 22px;
+  background: var(--code-bg);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  text-align: center;
+  color: var(--text);
+}
+
+/* ============ DEFINITION LIST ============ */
+.defs {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 20px;
+  margin: 16px 0;
+  padding: 18px 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.defs dt {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent);
+}
+.defs dd { color: var(--text); }
+@media (max-width: 500px) {
+  .defs { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* ============ PHASES ============ */
+.phases {
+  display: grid;
+  gap: 14px;
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  position: relative;
+}
+.phases::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: var(--border);
+}
+.phase {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+.phase-num {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  z-index: 1;
+  font-family: var(--font-mono);
+}
+.phase-body {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+}
+.phase-title { font-weight: 600; font-size: 15px; }
+
+/* ============ COMPARISON ROW ============ */
+.comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.comparison .comp-cell {
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ============ ARCHITECTURE DIAGRAM ============ */
+.arch {
+  margin: 28px 0;
+  padding: 28px 20px;
+  background: var(--code-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+.arch-caption {
+  text-align: center;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-subtle);
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+.arch-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.arch-node {
+  width: min(380px, 100%);
+  padding: 12px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.arch-node-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+.arch-node-sub {
+  font-size: 12px;
+  color: var(--text-subtle);
+  margin-top: 2px;
+}
+.arch-arrow {
+  width: 2px;
+  height: 22px;
+  background: var(--border-strong);
+  position: relative;
+}
+.arch-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--border-strong);
+  border-bottom: 2px solid var(--border-strong);
+}
+.arch-monitor-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.arch-monitor {
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
+.arch-levels {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.arch-level {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.arch-level.low { color: var(--risk-low); background: var(--risk-low-bg); border-color: var(--risk-low); }
+.arch-level.med { color: var(--risk-medium); background: var(--risk-medium-bg); border-color: var(--risk-medium); }
+.arch-level.high { color: var(--risk-high); background: var(--risk-high-bg); border-color: var(--risk-high); }
+.arch-level.crit { color: var(--risk-critical); background: var(--risk-critical-bg); border-color: var(--risk-critical); }
+.arch-node.highlight { border-color: var(--accent); }
+
+/* ============ MRS MODEL ============ */
+.mrs {
+  margin: 28px 0;
+  padding: 28px 20px;
+  background: var(--code-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.mrs-branches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 700px;
+  margin: 8px 0;
+}
+.mrs-branch {
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+.mrs-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 700px;
+  margin: 8px 0;
+}
+.mrs-action {
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ============ SIGNATURE BLOCK ============ */
+.signature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 60px;
+  margin-bottom: 40px;
+}
+.sig-line {
+  border-top: 1px solid var(--text);
+  padding-top: 10px;
+  margin-top: 60px;
+  text-align: center;
+  font-size: 14px;
+}
+.sig-name { font-weight: 600; margin-bottom: 2px; }
+.sig-role { font-size: 13px; color: var(--text-muted); }
+.sig-supervisor {
+  grid-column: 1 / -1;
+  margin: 40px auto 0;
+  width: 50%;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .signature-grid { grid-template-columns: 1fr; gap: 20px; }
+  .sig-supervisor { width: 100%; }
+}
+
+/* ============ PRESENTATION BAR ============ */
+.pres-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 8px 12px;
+  box-shadow: var(--shadow-md);
+  z-index: 60;
+  max-width: calc(100vw - 24px);
+}
+.pres-bar button {
+  border: 0;
+  background: transparent;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  border-radius: 999px;
+  transition: background 120ms, color 120ms;
+  white-space: nowrap;
+}
+.pres-bar button:hover { background: var(--accent-soft); color: var(--accent); }
+#presCounter {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 0 8px;
+  min-width: 70px;
+  text-align: center;
+}
+#presExit { color: var(--risk-high); }
+.pres-bar .lang-toggle { margin: 0 4px; }
+.pres-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+/* ============ PRESENTATION MODE ============ */
+body.presentation .site-header { display: none !important; }
+body.presentation .progress-bar { display: none !important; }
+body.presentation main { padding: 60px 0 140px; }
+body.presentation main > section { display: none !important; }
+body.presentation main > section.presentation-active {
+  display: block !important;
+  border-top: 0;
+}
+
+/* ============ FOOTER ============ */
+.site-footer {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-subtle);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+.site-footer p { margin: 4px 0; }
+
+/* ============ PRINT STYLESHEET (STRICT A4) ============ */
+@page {
+  size: 210mm 297mm; /* Standard A4 */
+  margin: 25.4mm;    /* 1 inch */
+}
+
+@media print {
+  /* Hide UI chrome */
+  .site-header, .progress-bar, .pres-bar, .skip-link,
+  .cover-badge, .btn-present, .btn-export, .lang-toggle { display: none !important; }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11.5pt;
+    line-height: 1.4;
+    font-family: "Times New Roman", Arial, Calibri, serif;
+  }
+  body[data-lang="bn"] {
+    font-family: "Noto Serif Bengali", "Times New Roman", serif;
+    line-height: 1.5;
+  }
+
+  /* Section flow */
+  main { padding: 0; }
+  .section {
+    max-width: 100%;
+    padding: 0;
+    margin: 0 0 14pt 0;
+    page-break-inside: auto;
+  }
+  .section + .section { border-top: 0; padding-top: 14pt; }
+  .section-header { page-break-after: avoid; margin-bottom: 10pt; }
+  .section-number { font-size: 10pt; color: #555; }
+
+  /* Heading hierarchy */
+  .section h2 {
+    font-family: Arial, "Times New Roman", serif;
+    font-size: 16pt; font-weight: bold; line-height: 1.2;
+    margin: 0 0 10pt 0; page-break-after: avoid;
+  }
+  .section h3 {
+    font-size: 13pt; font-weight: bold; line-height: 1.25;
+    margin: 14pt 0 6pt 0; page-break-after: avoid;
+  }
+  .cover h1 { font-size: 18pt; font-weight: bold; line-height: 1.2; }
+  .cover-sub { font-size: 13pt; line-height: 1.35; }
+
+  /* Body paragraphs */
+  .section p, .section li {
+    font-size: 11.5pt; line-height: 1.4;
+    orphans: 3; widows: 3;
+    text-align: justify; hyphens: auto;
+  }
+  .section p.lead { font-size: 12pt; line-height: 1.4; }
+
+  /* Preserve colour on diagrams */
+  .arch, .mrs, .formula {
+    page-break-inside: avoid;
+    background: #f7f7f7 !important;
+    border: 1px solid #999 !important;
+    box-shadow: none !important;
+  }
+  .arch-node, .arch-monitor, .mrs-branch, .mrs-action, .risk-badge {
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  /* Links */
+  a { color: #000; text-decoration: underline; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
+
+  * { box-shadow: none !important; text-shadow: none !important; }
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
+  .header-inner { flex-wrap: wrap; height: auto; padding: 10px 12px; gap: 10px; }
+  .header-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  .brand { flex: 1; }
+  .primary-nav { order: 3; width: 100%; padding-bottom: 4px; }
+}
+
+@media (max-width: 768px) {
+  .brand-sub { display: none; }
+  .primary-nav { font-size: 12px; }
+  .primary-nav a { padding: 5px 8px; }
+  .btn-export span[data-lang-en], .btn-export span[data-lang-bn] { font-size: 12px; }
+  .btn-export { padding: 6px 10px; font-size: 12px; }
+  .section { padding: 56px 18px; }
+  .cover { padding-top: 64px; padding-bottom: 64px; }
+  .sequence li:not(:last-child)::after { right: -16px; font-size: 12px; }
+  .sequence { gap: 10px 22px; }
+  .pres-bar { flex-wrap: wrap; justify-content: center; padding: 8px; gap: 4px; }
+  .pres-bar .lang-toggle { display: none; }
+}
+
+@media (max-width: 480px) {
+  .lang-toggle button { padding: 5px 9px; font-size: 12px; }
+  .brand { font-size: 14px; }
+  .btn-export { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body data-lang="en">
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="progress-bar" aria-hidden="true">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#cover" class="brand" aria-label="ShorbornoAI Research">
+      <span class="brand-mark" aria-hidden="true">◈</span>
+      <span>ShorbornoAI</span>
+      <span class="brand-sub">Research</span>
+    </a>
+    <nav class="primary-nav" aria-label="Document sections">
+      <a href="#cover"><span data-lang-en>Cover</span><span data-lang-bn hidden>কভার</span></a>
+      <a href="#problem"><span data-lang-en>Problem</span><span data-lang-bn hidden>সমস্যা</span></a>
+      <a href="#risk"><span data-lang-en>Risk & Trust</span><span data-lang-bn hidden>ঝুঁকি ও বিশ্বস্ততা</span></a>
+      <a href="#vision"><span data-lang-en>Vision</span><span data-lang-bn hidden>ভিশন</span></a>
+      <a href="#flow"><span data-lang-en>Flow</span><span data-lang-bn hidden>প্রবাহ</span></a>
+      <a href="#goal"><span data-lang-en>Goal</span><span data-lang-bn hidden>লক্ষ্য</span></a>
+      <a href="#questions"><span data-lang-en>Questions</span><span data-lang-bn hidden>প্রশ্ন</span></a>
+      <a href="#why"><span data-lang-en>Why Memory</span><span data-lang-bn hidden>কেন স্মৃতি</span></a>
+      <a href="#architecture"><span data-lang-en>Architecture</span><span data-lang-bn hidden>আর্কিটেকচার</span></a>
+      <a href="#lab"><span data-lang-en>Lab</span><span data-lang-bn hidden>ল্যাব</span></a>
+      <a href="#datasets"><span data-lang-en>Datasets</span><span data-lang-bn hidden>ডেটাসেট</span></a>
+      <a href="#telemetry"><span data-lang-en>Signals</span><span data-lang-bn hidden>সংকেত</span></a>
+      <a href="#method"><span data-lang-en>Method</span><span data-lang-bn hidden>পদ্ধতি</span></a>
+      <a href="#mrs"><span data-lang-en>MRS Model</span><span data-lang-bn hidden>MRS মডেল</span></a>
+      <a href="#response"><span data-lang-en>Response</span><span data-lang-bn hidden>সাড়া</span></a>
+      <a href="#metrics"><span data-lang-en>Metrics</span><span data-lang-bn hidden>মেট্রিক</span></a>
+      <a href="#phases"><span data-lang-en>Phases</span><span data-lang-bn hidden>পর্ব</span></a>
+      <a href="#examples"><span data-lang-en>Examples</span><span data-lang-bn hidden>উদাহরণ</span></a>
+      <a href="#contribution"><span data-lang-en>Contribution</span><span data-lang-bn hidden>অবদান</span></a>
+      <a href="#integrity"><span data-lang-en>Integrity</span><span data-lang-bn hidden>অখণ্ডতা</span></a>
+      <a href="#position"><span data-lang-en>Position</span><span data-lang-bn hidden>অবস্থান</span></a>
+      <a href="#chapter2"><span data-lang-en>Ch. 2 Review</span><span data-lang-bn hidden>অধ্যায় ২</span></a>
+      <a href="#signatures"><span data-lang-en>Signatures</span><span data-lang-bn hidden>স্বাক্ষর</span></a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button data-set-lang="en" aria-pressed="true">EN</button>
+        <button data-set-lang="bn" aria-pressed="false">বাংলা</button>
+      </div>
+      <button class="btn-export btn-pdf" id="exportPdf">
+        <span data-lang-en>📄 Export as A4 PDF</span>
+        <span data-lang-bn hidden>📄 A4 PDF ডাউনলোড</span>
+      </button>
+      <button class="btn-export btn-ppt" id="exportPpt">
+        <span data-lang-en>📊 Export as PowerPoint</span>
+        <span data-lang-bn hidden>📊 PowerPoint ডাউনলোড</span>
+      </button>
+      <button class="btn-present" id="enterPresentation" aria-label="Start presentation mode">
+        <span data-lang-en>▶ Present</span>
+        <span data-lang-bn hidden>▶ উপস্থাপনা</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- 1. COVER -->
+<section id="cover" class="section cover">
+  <div class="cover-badge">
+    <span data-lang-en>Research Proposal</span>
+    <span data-lang-bn hidden>গবেষণা প্রস্তাবনা</span>
+  </div>
+  <h1>
+    <span data-lang-en>Predictive Memory Security Assessment for AI Systems</span>
+    <span data-lang-bn hidden>এআই সিস্টেমের জন্য পূর্বানুমানমূলক স্মৃতি নিরাপত্তা মূল্যায়ন</span>
+  </h1>
+  <p class="cover-sub">
+    <span data-lang-en>A Memory Risk Assessment Framework Using the ShorbornoAI Bengali Knowledge Platform</span>
+    <span data-lang-bn hidden>শরবর্ণএআই বাংলা নলেজ প্ল্যাটফর্ম ব্যবহার করে একটি স্মৃতি-ঝুঁকি মূল্যায়ন কাঠামো</span>
+  </p>
+
+  <div class="cover-meta">
+    <div class="meta-strong">
+      <span data-lang-en>University of Dhaka (DUCSE)</span>
+      <span data-lang-bn hidden>ঢাকা বিশ্ববিদ্যালয় (DUCSE)</span>
+    </div>
+    <div>
+      <span data-lang-en>Department of Computer Science and Engineering</span>
+      <span data-lang-bn hidden>কম্পিউটার সায়েন্স অ্যান্ড ইঞ্জিনিয়ারিং বিভাগ</span>
+    </div>
+    <div>
+      <span data-lang-en>Professional Master of Information and Cyber Security (PMICS)</span>
+      <span data-lang-bn hidden>পেশাদার মাস্টার অব ইনফরমেশন অ্যান্ড সাইবার সিকিউরিটি (PMICS)</span>
+    </div>
+    <div>
+      <span data-lang-en>Course: CSE-810 (6-Credit Practical Evaluation) · Batch 04</span>
+      <span data-lang-bn hidden>কোর্স: CSE-810 (৬-ক্রেডিট প্র্যাকটিক্যাল ইভ্যালুয়েশন) · ব্যাচ ০৪</span>
+    </div>
+  </div>
+
+  <div class="cover-authors">
+    <div class="authors-label">
+      <span data-lang-en>Submitted by</span>
+      <span data-lang-bn hidden>জমা দিয়েছেন</span>
+    </div>
+    <div>
+      <span data-lang-en>Md. Aminul Islam (Roll: 70002) · Alvee Talukder (Roll: 70062)</span>
+      <span data-lang-bn hidden>মো. আমিনুল ইসলাম (রোল: ৭০০০২) · আলভী তালুকদার (রোল: ৭০০৬২)</span>
+    </div>
+    <div style="margin-top:10px;">
+      <span class="meta-strong" data-lang-en>Supervisor:</span>
+      <span class="meta-strong" data-lang-bn hidden>সুপারভাইজার:</span>
+      <span data-lang-en> Prof. Dr. Md. Rezaul Karim</span>
+      <span data-lang-bn hidden> অধ্যাপক ড. মো. রেজাউল করিম</span>
+    </div>
+  </div>
+
+  <div class="cover-notice">
+    <span class="badge-proposed">
+      <span data-lang-en>Proposed research concept — not a completed result</span>
+      <span data-lang-bn hidden>প্রস্তাবিত গবেষণা ধারণা — সম্পন্ন ফলাফল নয়</span>
+    </span>
+  </div>
+</section>
+
+<!-- 2. PROBLEM STATEMENT -->
+<section id="problem" class="section">
+  <header class="section-header">
+    <div class="section-number">02</div>
+    <h2>
+      <span data-lang-en>Problem Statement</span>
+      <span data-lang-bn hidden>সমস্যা বিবৃতি</span>
+    </h2>
+  </header>
+  <div data-lang-en>
+    <p class="lead">AI systems may experience memory-related security risks that are detected only after knowledge integrity or system behaviour has been affected. A systematic and measurable framework is needed to determine whether observable integrity, provenance, behavioural, persistence, and language-related signals can provide early indications of emerging memory risks and support timely response and recovery.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p class="lead">এআই সিস্টেমে স্মৃতি-সম্পর্কিত নিরাপত্তা ঝুঁকি দেখা দিতে পারে যা কেবল তখনই শনাক্ত হয় যখন জ্ঞান-অখণ্ডতা বা সিস্টেমের আচরণ ইতোমধ্যে প্রভাবিত হয়ে পড়েছে। একটি সুসংগত ও পরিমাপযোগ্য কাঠামো প্রয়োজন যা নির্ধারণ করবে যে পর্যবেক্ষণযোগ্য অখণ্ডতা, উৎস-প্রমাণ, আচরণগত, স্থায়িত্ব এবং ভাষা-সম্পর্কিত সংকেতগুলো উদীয়মান স্মৃতি-ঝুঁকির প্রাথমিক ইঙ্গিত দিতে পারে এবং সময়মতো সাড়া ও পুনরুদ্ধারকে সমর্থন করতে পারে।</p>
+  </div>
+</section>
+
+<!-- 3. AI RISK AND TRUSTWORTHINESS (Short) -->
+<section id="risk" class="section">
+  <header class="section-header">
+    <div class="section-number">03</div>
+    <h2>
+      <span data-lang-en>AI Risk and Trustworthiness</span>
+      <span data-lang-bn hidden>এআই ঝুঁকি ও বিশ্বস্ততা</span>
+    </h2>
+  </header>
+  <div data-lang-en>
+    <p>AI risk involves the potential for systems to produce harmful, insecure, or unfair outcomes. As AI systems retain information over time, memory-related risks can persist and influence future behavior. AI trustworthiness requires assurance that systems remain reliable, safe, secure, and accountable throughout their lifecycle. Evaluating observable signals for memory integrity, provenance, and behavioral consistency provides a foundation for assessing these risks.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এআই ঝুঁকি বলতে সিস্টেমের ক্ষতিকর, অনিরাপদ বা অন্যায্য ফলাফল তৈরি করার সম্ভাবনাকে বোঝায়। এআই সিস্টেম সময়ের সাথে তথ্য ধরে রাখার কারণে স্মৃতি-সম্পর্কিত ঝুঁকি স্থায়ী হতে পারে এবং ভবিষ্যতের আচরণকে প্রভাবিত করতে পারে। এআই বিশ্বস্ততার জন্য সিস্টেমের জীবনচক্র জুড়ে নির্ভরযোগ্য, নিরাপদ এবং জবাবদিহিমূলক থাকার নিশ্চয়তা প্রয়োজন। স্মৃতি-অখণ্ডতা, উৎস এবং আচরণগত ধারাবাহিকতার জন্য পর্যবেক্ষণযোগ্য সংকেত মূল্যায়ন এই ঝুঁকিগুলো মূল্যায়নের একটি ভিত্তি প্রদান করে।</p>
+  </div>
+</section>
+
+<!-- 4. VISION STATEMENT -->
+<section id="vision" class="section">
+  <header class="section-header">
+    <div class="section-number">04</div>
+    <h2>
+      <span data-lang-en>Vision Statement</span>
+      <span data-lang-bn hidden>ভিশন স্টেটমেন্ট</span>
+    </h2>
+  </header>
+  <div data-lang-en>
+    <blockquote style="border-left: 3px solid var(--accent); padding-left: 20px; margin: 20px 0; font-style: italic; font-size: 18px; color: var(--text-muted); line-height: 1.7;">
+      "To develop a Predictive Memory Security Framework that enables trustworthy AI systems by detecting and mitigating persistent memory threats, validated through the ShorbornoAI Bengali Knowledge Platform and supporting the future development of secure Bengali AI ecosystems."
+    </blockquote>
+  </div>
+  <div data-lang-bn hidden>
+    <blockquote style="border-left: 3px solid var(--accent); padding-left: 20px; margin: 20px 0; font-style: italic; font-size: 18px; color: var(--text-muted); line-height: 1.7;">
+      "একটি প্রেডিক্টিভ মেমরি সিকিউরিটি ফ্রেমওয়ার্ক তৈরি করা যা স্থায়ী মেমরি হুমকি সনাক্ত এবং প্রশমিত করে বিশ্বস্ত এআই সিস্টেম সক্ষম করে, শরবর্ণএআই বাংলা নলেজ প্ল্যাটফর্মের মাধ্যমে যাচাই করা হয় এবং নিরাপদ বাংলা এআই ইকোসিস্টেমের ভবিষ্যৎ উন্নয়নকে সমর্থন করে।"
+    </blockquote>
+  </div>
+</section>
+
+<!-- 5. RESEARCH FLOW -->
+<section id="flow" class="section">
+  <header class="section-header">
+    <div class="section-number">05</div>
+    <h2>
+      <span data-lang-en>Research Flow</span>
+      <span data-lang-bn hidden>গবেষণা প্রবাহ</span>
+    </h2>
+  </header>
+  <ol class="sequence">
+    <li><span data-lang-en>Clean Baseline</span><span data-lang-bn hidden>পরিচ্ছন্ন ভিত্তিরেখা</span></li>
+    <li><span data-lang-en>Controlled Research Scenarios</span><span data-lang-bn hidden>নিয়ন্ত্রিত গবেষণা দৃশ্যকল্প</span></li>
+    <li><span data-lang-en>Telemetry Collection</span><span data-lang-bn hidden>টেলিমেট্রি সংগ্রহ</span></li>
+    <li><span data-lang-en>Signal Analysis</span><span data-lang-bn hidden>সংকেত বিশ্লেষণ</span></li>
+    <li><span data-lang-en>Predictive Risk Assessment</span><span data-lang-bn hidden>পূর্বানুমানমূলক ঝুঁকি মূল্যায়ন</span></li>
+    <li><span data-lang-en>Early Warning</span><span data-lang-bn hidden>প্রাথমিক সতর্কতা</span></li>
+    <li><span data-lang-en>Response</span><span data-lang-bn hidden>সাড়া</span></li>
+    <li><span data-lang-en>Recovery</span><span data-lang-bn hidden>পুনরুদ্ধার</span></li>
+    <li><span data-lang-en>Resilience Evaluation</span><span data-lang-bn hidden>সহনশীলতা মূল্যায়ন</span></li>
+  </ol>
+</section>
+
+<!-- 6. RESEARCH GOAL AND OBJECTIVES -->
+<section id="goal" class="section">
+  <header class="section-header">
+    <div class="section-number">06</div>
+    <h2>
+      <span data-lang-en>Research Goal and Objectives</span>
+      <span data-lang-bn hidden>গবেষণার লক্ষ্য ও উদ্দেশ্য</span>
+    </h2>
+  </header>
+
+  <h3>
+    <span data-lang-en>Research Goal</span>
+    <span data-lang-bn hidden>গবেষণার লক্ষ্য</span>
+  </h3>
+  <div data-lang-en>
+    <p>To develop and evaluate a predictive memory risk assessment framework that identifies measurable indicators of potential memory-related security risks in AI systems and evaluates early warning, response, recovery, and resilience.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এআই সিস্টেমে সম্ভাব্য স্মৃতি-সম্পর্কিত নিরাপত্তা ঝুঁকির পরিমাপযোগ্য সূচকগুলো শনাক্ত করতে এবং প্রাথমিক সতর্কতা, সাড়া, পুনরুদ্ধার ও সহনশীলতা মূল্যায়ন করতে একটি পূর্বানুমানমূলক স্মৃতি-ঝুঁকি মূল্যায়ন কাঠামো তৈরি ও মূল্যায়ন করা।</p>
+  </div>
+
+  <h3>
+    <span data-lang-en>Research Objectives</span>
+    <span data-lang-bn hidden>গবেষণার উদ্দেশ্য</span>
+  </h3>
+  <ul data-lang-en>
+    <li>Establish a trusted baseline of normal system behaviour.</li>
+    <li>Design safe, controlled research scenarios in an isolated environment.</li>
+    <li>Collect telemetry from query, retrieval, memory, and behavioural layers.</li>
+    <li>Identify observable signals associated with emerging memory-related risk.</li>
+    <li>Develop a transparent conceptual Memory Risk Assessment model.</li>
+    <li>Evaluate early warning, response, recovery, and resilience.</li>
+    <li>Assess impact using Confidentiality, Integrity, and Availability.</li>
+  </ul>
+  <ul data-lang-bn hidden>
+    <li>স্বাভাবিক সিস্টেম-আচরণের একটি বিশ্বস্ত ভিত্তিরেখা প্রতিষ্ঠা করা।</li>
+    <li>একটি বিচ্ছিন্ন পরিবেশে নিরাপদ, নিয়ন্ত্রিত গবেষণা দৃশ্যকল্প ডিজাইন করা।</li>
+    <li>প্রশ্ন, পুনরুদ্ধার, স্মৃতি ও আচরণগত স্তর থেকে টেলিমেট্রি সংগ্রহ করা।</li>
+    <li>উদীয়মান স্মৃতি-সম্পর্কিত ঝুঁকির সঙ্গে সংশ্লিষ্ট পর্যবেক্ষণযোগ্য সংকেত শনাক্ত করা।</li>
+    <li>একটি স্বচ্ছ ধারণাগত স্মৃতি-ঝুঁকি মূল্যায়ন মডেল তৈরি করা।</li>
+    <li>প্রাথমিক সতর্কতা, সাড়া, পুনরুদ্ধার ও সহনশীলতা মূল্যায়ন করা।</li>
+    <li>গোপনীয়তা, অখণ্ডতা ও প্রাপ্যতা ব্যবহার করে প্রভাব মূল্যায়ন করা।</li>
+  </ul>
+</section>
+
+<!-- 7. RESEARCH QUESTIONS AND HYPOTHESES -->
+<section id="questions" class="section">
+  <header class="section-header">
+    <div class="section-number">07</div>
+    <h2>
+      <span data-lang-en>Research Questions and Hypotheses</span>
+      <span data-lang-bn hidden>গবেষণা প্রশ্ন ও অনুমান</span>
+    </h2>
+  </header>
+
+  <h3>
+    <span data-lang-en>Research Questions</span>
+    <span data-lang-bn hidden>গবেষণা প্রশ্ন</span>
+  </h3>
+  <div data-lang-en>
+    <p><strong>RQ1.</strong> Can observable integrity, provenance, behavioural, and persistence signals provide measurable early indications of emerging memory-related security risks?</p>
+    <p><strong>RQ2.</strong> Does combining multiple weak signals provide more useful early warning than relying only on post-impact detection?</p>
+    <p><strong>RQ3.</strong> Do Bengali, Banglish, and mixed-language interactions affect the visibility or consistency of predictive signals?</p>
+    <p><strong>RQ4.</strong> Can response and recovery effectiveness be measured against a trusted baseline?</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p><strong>RQ1.</strong> পর্যবেক্ষণযোগ্য অখণ্ডতা, উৎস-প্রমাণ, আচরণগত ও স্থায়িত্ব সংকেত কি উদীয়মান স্মৃতি-সম্পর্কিত নিরাপত্তা ঝুঁকির পরিমাপযোগ্য প্রাথমিক ইঙ্গিত দিতে পারে?</p>
+    <p><strong>RQ2.</strong> একাধিক দুর্বল সংকেত একত্রিত করলে কি কেবল প্রভাব-পরবর্তী শনাক্তকরণের উপর নির্ভর করার চেয়ে বেশি কার্যকর প্রাথমিক সতর্কতা পাওয়া যায়?</p>
+    <p><strong>RQ3.</strong> বাংলা, বাংলিশ ও মিশ্র-ভাষার মিথস্ক্রিয়া কি পূর্বানুমানমূলক সংকেতের দৃশ্যমানতা বা ধারাবাহিকতাকে প্রভাবিত করে?</p>
+    <p><strong>RQ4.</strong> একটি বিশ্বস্ত ভিত্তিরেখার বিপরীতে সাড়া ও পুনরুদ্ধারের কার্যকারিতা পরিমাপ করা যায় কি?</p>
+  </div>
+
+  <h3>
+    <span data-lang-en>Research Hypotheses</span>
+    <span data-lang-bn hidden>গবেষণা অনুমান</span>
+  </h3>
+  <p><span class="badge-proposed">
+    <span data-lang-en>Proposed hypotheses — to be evaluated, not yet established</span>
+    <span data-lang-bn hidden>প্রস্তাবিত অনুমান — মূল্যায়নযোগ্য, এখনো প্রতিষ্ঠিত নয়</span>
+  </span></p>
+
+  <div data-lang-en>
+    <p><strong>H1.</strong> A combination of integrity, provenance, behavioural, and persistence signals can provide earlier indications of memory-related risk than relying only on post-compromise detection.</p>
+    <p><strong>H2.</strong> Language variation may influence the observability and consistency of memory-related security signals.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p><strong>H1.</strong> অখণ্ডতা, উৎস-প্রমাণ, আচরণগত ও স্থায়িত্ব সংকেতের সমন্বয় কেবল আপস-পরবর্তী শনাক্তকরণের উপর নির্ভর করার চেয়ে স্মৃতি-সম্পর্কিত ঝুঁকির আগাম ইঙ্গিত দিতে পারে।</p>
+    <p><strong>H2.</strong> ভাষার ভিন্নতা স্মৃতি-সম্পর্কিত নিরাপত্তা সংকেতের পর্যবেক্ষণযোগ্যতা ও ধারাবাহিকতাকে প্রভাবিত করতে পারে।</p>
+  </div>
+</section>
+
+<!-- 8. WHY MEMORY? -->
+<section id="why" class="section">
+  <header class="section-header">
+    <div class="section-number">08</div>
+    <h2>
+      <span data-lang-en>Why Memory?</span>
+      <span data-lang-bn hidden>কেন স্মৃতি?</span>
+    </h2>
+  </header>
+  <div data-lang-en>
+    <p>Memory can connect past information with future AI behaviour. Information that persists in a memory or knowledge state may influence later retrieval and responses. Memory security is therefore connected to knowledge integrity, AI trustworthiness, behavioural consistency, persistence, recovery, and resilience.</p>
+    <p><strong>Core principle:</strong> Memory is not just stored information; in an AI system, it can influence future behaviour.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>স্মৃতি অতীতের তথ্যের সঙ্গে ভবিষ্যতের এআই আচরণকে সংযুক্ত করতে পারে। স্মৃতি বা জ্ঞান-অবস্থায় টিকে থাকা তথ্য পরবর্তী পুনরুদ্ধার ও প্রতিক্রিয়াকে প্রভাবিত করতে পারে। তাই স্মৃতি-নিরাপত্তা জ্ঞান-অখণ্ডতা, এআই-বিশ্বস্ততা, আচরণগত ধারাবাহিকতা, স্থায়িত্ব, পুনরুদ্ধার ও সহনশীলতার সঙ্গে যুক্ত।</p>
+    <p><strong>মূল নীতি:</strong> স্মৃতি কেবল সংরক্ষিত তথ্য নয়; একটি এআই সিস্টেমে এটি ভবিষ্যতের আচরণকে প্রভাবিত করতে পারে।</p>
+  </div>
+</section>
+
+<!-- 9. RESEARCH ARCHITECTURE -->
+<section id="architecture" class="section">
+  <header class="section-header">
+    <div class="section-number">09</div>
+    <h2>
+      <span data-lang-en>Research Architecture</span>
+      <span data-lang-bn hidden>গবেষণা আর্কিটেকচার</span>
+    </h2>
+  </header>
+
+  <div data-lang-en>
+    <p>The architecture separates user interaction, the ShorbornoAI platform, the AI memory layer, security monitoring, telemetry collection, predictive risk assessment, early warning, response, recovery, and resilience evaluation into distinct observable stages.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>আর্কিটেকচারটি ব্যবহারকারী ইন্টারঅ্যাকশন, শরবর্ণএআই প্ল্যাটফর্ম, এআই স্মৃতি স্তর, নিরাপত্তা পর্যবেক্ষণ, টেলিমেট্রি সংগ্রহ, পূর্বানুমানমূলক ঝুঁকি মূল্যায়ন, প্রাথমিক সতর্কতা, সাড়া, পুনরুদ্ধার এবং সহনশীলতা মূল্যায়নকে পৃথক পর্যবেক্ষণযোগ্য পর্যায়ে বিভক্ত করে।</p>
+  </div>
+
+  <figure class="arch" aria-labelledby="archCap">
+    <div class="arch-caption" id="archCap">
+      <span data-lang-en>Proposed System Architecture — ShorbornoAI</span>
+      <span data-lang-bn hidden>প্রস্তাবিত সিস্টেম আর্কিটেকচার — শরবর্ণএআই</span>
+    </div>
+    <div class="arch-stack">
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>User Interaction</span><span data-lang-bn hidden>ব্যবহারকারী ইন্টারঅ্যাকশন</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Bengali · Banglish · Mixed Language</span><span data-lang-bn hidden>বাংলা · বাংলিশ · মিশ্র ভাষা</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>ShorbornoAI Platform</span><span data-lang-bn hidden>শরবর্ণএআই প্ল্যাটফর্ম</span></div>
+        <div class="arch-node-sub"><span data-lang-en>AI Interaction & Processing</span><span data-lang-bn hidden>এআই মিথস্ক্রিয়া ও প্রক্রিয়াকরণ</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>AI Memory Layer</span><span data-lang-bn hidden>এআই স্মৃতি স্তর</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Storage & Update Events</span><span data-lang-bn hidden>সংরক্ষণ ও হালনাগাদ ঘটনা</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-monitor-group">
+        <div class="arch-monitor"><span data-lang-en>Integrity</span><span data-lang-bn hidden>অখণ্ডতা</span></div>
+        <div class="arch-monitor"><span data-lang-en>Provenance</span><span data-lang-bn hidden>উৎস-প্রমাণ</span></div>
+        <div class="arch-monitor"><span data-lang-en>Persistence</span><span data-lang-bn hidden>স্থায়িত্ব</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>Behavioural Monitoring</span><span data-lang-bn hidden>আচরণগত পর্যবেক্ষণ</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Baseline & Behavioural Drift</span><span data-lang-bn hidden>ভিত্তিরেখা ও আচরণগত বিচ্যুতি</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>Telemetry Collection</span><span data-lang-bn hidden>টেলিমেট্রি সংগ্রহ</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Logs · Events · Traces · Metrics</span><span data-lang-bn hidden>লগ · ঘটনা · ট্রেস · মেট্রিক</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>Predictive Risk Assessment</span><span data-lang-bn hidden>পূর্বানুমানমূলক ঝুঁকি মূল্যায়ন</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Memory Risk Assessment</span><span data-lang-bn hidden>স্মৃতি-ঝুঁকি মূল্যায়ন</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-levels">
+        <span class="arch-level low"><span data-lang-en>Low</span><span data-lang-bn hidden>নিম্ন</span></span>
+        <span class="arch-level med"><span data-lang-en>Medium</span><span data-lang-bn hidden>মধ্যম</span></span>
+        <span class="arch-level high"><span data-lang-en>High</span><span data-lang-bn hidden>উচ্চ</span></span>
+        <span class="arch-level crit"><span data-lang-en>Critical</span><span data-lang-bn hidden>সংকটপূর্ণ</span></span>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>Early Warning System</span><span data-lang-bn hidden>প্রাথমিক সতর্কতা সিস্টেম</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Alerts & Notifications</span><span data-lang-bn hidden>সতর্কতা ও বিজ্ঞপ্তি</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node">
+        <div class="arch-node-title"><span data-lang-en>Response & Recovery</span><span data-lang-bn hidden>সাড়া ও পুনরুদ্ধার</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Isolation · Validation · Restore</span><span data-lang-bn hidden>বিচ্ছিন্নকরণ · যাচাই · পুনঃস্থাপন</span></div>
+      </div>
+      <div class="arch-arrow"></div>
+      <div class="arch-node highlight">
+        <div class="arch-node-title"><span data-lang-en>Resilience Evaluation</span><span data-lang-bn hidden>সহনশীলতা মূল্যায়ন</span></div>
+        <div class="arch-node-sub"><span data-lang-en>Baseline vs Experiment vs Recovery</span><span data-lang-bn hidden>ভিত্তিরেখা বনাম পরীক্ষা বনাম পুনরুদ্ধার</span></div>
+      </div>
+    </div>
+  </figure>
+</section>
+
+<!-- 10. LABORATORY ENVIRONMENT -->
+<section id="lab" class="section">
+  <header class="section-header">
+    <div class="section-number">10</div>
+    <h2>
+      <span data-lang-en>Laboratory Environment</span>
+      <span data-lang-bn hidden>পরীক্ষাগার পরিবেশ</span>
+    </h2>
+  </header>
+
+  <div data-lang-en>
+    <p>The research environment remains isolated from production systems.</p>
+    <ul>
+      <li><strong>Baseline Zone:</strong> trusted knowledge and normal behaviour profile.</li>
+      <li><strong>Experiment Zone:</strong> controlled research scenarios.</li>
+      <li><strong>Memory Zone:</strong> observation of updates and persistence.</li>
+      <li><strong>Observability Zone:</strong> logs, traces, and time-stamped telemetry.</li>
+      <li><strong>Analysis Zone:</strong> signal analysis and risk assessment.</li>
+      <li><strong>Recovery Zone:</strong> controlled restoration and validation.</li>
+    </ul>
+    <p>Trusted baseline data and experimental data must remain separated.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>গবেষণা পরিবেশ প্রোডাকশন সিস্টেম থেকে বিচ্ছিন্ন থাকবে।</p>
+    <ul>
+      <li><strong>ভিত্তিরেখা অঞ্চল:</strong> বিশ্বস্ত জ্ঞান এবং স্বাভাবিক আচরণের প্রোফাইল।</li>
+      <li><strong>পরীক্ষা অঞ্চল:</strong> নিয়ন্ত্রিত গবেষণা দৃশ্যকল্প।</li>
+      <li><strong>স্মৃতি অঞ্চল:</strong> হালনাগাদ ও স্থায়িত্বের পর্যবেক্ষণ।</li>
+      <li><strong>পর্যবেক্ষণযোগ্যতা অঞ্চল:</strong> লগ, ট্রেস এবং সময়-চিহ্নিত টেলিমেট্রি।</li>
+      <li><strong>বিশ্লেষণ অঞ্চল:</strong> সংকেত বিশ্লেষণ ও ঝুঁকি মূল্যায়ন।</li>
+      <li><strong>পুনরুদ্ধার অঞ্চল:</strong> নিয়ন্ত্রিত পুনঃস্থাপন ও যাচাই।</li>
+    </ul>
+    <p>বিশ্বস্ত ভিত্তিরেখা ডেটা এবং পরীক্ষামূলক ডেটা পৃথক থাকতে হবে।</p>
+  </div>
+</section>
+
+<!-- 11. DATASET STRATEGY -->
+<section id="datasets" class="section">
+  <header class="section-header">
+    <div class="section-number">11</div>
+    <h2>
+      <span data-lang-en>Dataset Strategy</span>
+      <span data-lang-bn hidden>ডেটাসেট কৌশল</span>
+    </h2>
+  </header>
+
+  <div data-lang-en>
+    <p><strong>A. Trusted Baseline Dataset:</strong> verified knowledge and expected behaviour.</p>
+    <p><strong>B. Controlled Experiment Dataset:</strong> safely controlled variations used to observe measurable signals.</p>
+    <p><strong>C. Evaluation Dataset:</strong> separated data used to evaluate previously unseen conditions.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p><strong>A. বিশ্বস্ত ভিত্তিরেখা ডেটাসেট:</strong> যাচাইকৃত জ্ঞান এবং প্রত্যাশিত আচরণ।</p>
+    <p><strong>B. নিয়ন্ত্রিত পরীক্ষা ডেটাসেট:</strong> পরিমাপযোগ্য সংকেত পর্যবেক্ষণে ব্যবহৃত নিরাপদে নিয়ন্ত্রিত ভিন্নতা।</p>
+    <p><strong>C. মূল্যায়ন ডেটাসেট:</strong> পূর্বে অদেখা অবস্থা মূল্যায়নে ব্যবহৃত পৃথক ডেটা।</p>
+  </div>
+</section>
+
+<!-- 12. TELEMETRY AND PREDICTIVE SIGNALS -->
+<section id="telemetry" class="section">
+  <header class="section-header">
+    <div class="section-number">12</div>
+    <h2>
+      <span data-lang-en>Telemetry and Predictive Signals</span>
+      <span data-lang-bn hidden>টেলিমেট্রি ও পূর্বানুমানমূলক সংকেত</span>
+    </h2>
+  </header>
+
+  <div data-lang-en>
+    <p><strong>Query:</strong> language category, repetition, frequency, pattern changes.</p>
+    <p><strong>Retrieval:</strong> source, consistency, provenance, unexpected changes.</p>
+    <p><strong>Memory:</strong> update events, modification history, persistence.</p>
+    <p><strong>Behaviour:</strong> response consistency and deviation from baseline.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p><strong>প্রশ্ন:</strong> ভাষার শ্রেণি, পুনরাবৃত্তি, কম্পাঙ্ক, প্যাটার্ন-পরিবর্তন।</p>
+    <p><strong>পুনরুদ্ধার:</strong> উৎস, ধারাবাহিকতা, উৎস-প্রমাণ, অপ্রত্যাশিত পরিবর্তন।</p>
+    <p><strong>স্মৃতি:</strong> হালনাগাদ ঘটনা, পরিবর্তনের ইতিহাস, স্থায়িত্ব।</p>
+    <p><strong>আচরণ:</strong> প্রতিক্রিয়ার ধারাবাহিকতা এবং ভিত্তিরেখা থেকে বিচ্যুতি।</p>
+  </div>
+
+  <h3>
+    <span data-lang-en>Primary Signal Groups</span>
+    <span data-lang-bn hidden>প্রধান সংকেত গোষ্ঠী</span>
+  </h3>
+  <div class="chips">
+    <span class="chip"><span data-lang-en>Integrity</span><span data-lang-bn hidden>অখণ্ডতা</span></span>
+    <span class="chip"><span data-lang-en>Provenance</span><span data-lang-bn hidden>উৎস-প্রমাণ</span></span>
+    <span class="chip"><span data-lang-en>Behaviour</span><span data-lang-bn hidden>আচরণ</span></span>
+    <span class="chip"><span data-lang-en>Persistence</span><span data-lang-bn hidden>স্থায়িত্ব</span></span>
+    <span class="chip"><span data-lang-en>Language variation</span><span data-lang-bn hidden>ভাষা-ভিন্নতা</span></span>
+  </div>
+</section>
+
+<!-- 13. PREDICTIVE ANALYSIS METHOD -->
+<section id="method" class="section">
+  <header class="section-header">
+    <div class="section-number">13</div>
+    <h2>
+      <span data-lang-en>Predictive Analysis Method</span>
+      <span data-lang-bn hidden>পূর্বানুমানমূলক বিশ্লেষণ পদ্ধতি</span>
+    </h2>
+  </header>
+
+  <ol data-lang-en>
+    <li>Establish normal baseline behaviour.</li>
+    <li>Collect time-stamped telemetry.</li>
+    <li>Define measurable features and candidate warning signals.</li>
+    <li>Analyse whether small changes repeatedly appear before higher-risk outcomes.</li>
+    <li>Begin with transparent rule-based or weighted assessment.</li>
+    <li>Validate whether signals provided useful lead time.</li>
+    <li>Measure false alarms, missed detections, and consistency.</li>
+  </ol>
+  <ol data-lang-bn hidden>
+    <li>স্বাভাবিক ভিত্তিরেখা আচরণ প্রতিষ্ঠা করা।</li>
+    <li>সময়-চিহ্নিত টেলিমেট্রি সংগ্রহ করা।</li>
+    <li>পরিমাপযোগ্য বৈশিষ্ট্য এবং প্রার্থী সতর্কতা সংকেত সংজ্ঞায়িত করা।</li>
+    <li>বিশ্লেষণ করা যে উচ্চ-ঝুঁকির ফলাফলের পূর্বে ছোট পরিবর্তনগুলো বারবার দেখা যায় কি না।</li>
+    <li>স্বচ্ছ নিয়ম-ভিত্তিক বা ওজনযুক্ত মূল্যায়ন দিয়ে শুরু করা।</li>
+    <li>যাচাই করা যে সংকেতগুলো কার্যকর সতর্ক-সময় দিয়েছে কি না।</li>
+    <li>মিথ্যা সতর্কতা, মিসড ডিটেকশন এবং ধারাবাহিকতা পরিমাপ করা।</li>
+  </ol>
+
+  <h3>
+    <span data-lang-en>Core Predictive Sequence</span>
+    <span data-lang-bn hidden>মূল পূর্বানুমানমূলক ক্রম</span>
+  </h3>
+  <ol class="sequence">
+    <li><span data-lang-en>Small Change</span><span data-lang-bn hidden>ছোট পরিবর্তন</span></li>
+    <li><span data-lang-en>Repeated Signal</span><span data-lang-bn hidden>পুনরাবৃত্ত সংকেত</span></li>
+    <li><span data-lang-en>Pattern</span><span data-lang-bn hidden>প্যাটার্ন</span></li>
+    <li><span data-lang-en>Increased Risk</span><span data-lang-bn hidden>বর্ধিত ঝুঁকি</span></li>
+    <li><span data-lang-en>Early Warning</span><span data-lang-bn hidden>প্রাথমিক সতর্কতা</span></li>
+  </ol>
+</section>
+
+<!-- 14. MEMORY RISK ASSESSMENT MODEL -->
+<section id="mrs" class="section">
+  <header class="section-header">
+    <div class="section-number">14</div>
+    <h2>
+      <span data-lang-en>Memory Risk Assessment Model</span>
+      <span data-lang-bn hidden>স্মৃতি-ঝুঁকি মূল্যায়ন মডেল</span>
+    </h2>
+  </header>
+  <p><span class="badge-proposed">
+    <span data-lang-en>Conceptual model — weights to be refined using experimental evidence</span>
+    <span data-lang-bn hidden>ধারণাগত মডেল — পরীক্ষামূলক প্রমাণ ব্যবহার করে ওজন পরিমার্জিত হবে</span>
+  </span></p>
+
+  <div class="formula">MRS = f(I, P, B, S, L)</div>
+
+  <dl class="defs">
+    <dt>I</dt>
+    <dd><span data-lang-en>Integrity Risk</span><span data-lang-bn hidden>অখণ্ডতা ঝুঁকি</span></dd>
+    <dt>P</dt>
+    <dd><span data-lang-en>Provenance Risk</span><span data-lang-bn hidden>উৎস-প্রমাণ ঝুঁকি</span></dd>
+    <dt>B</dt>
+    <dd><span data-lang-en>Behavioural Anomaly</span><span data-lang-bn hidden>আচরণগত অসঙ্গতি</span></dd>
+    <dt>S</dt>
+    <dd><span data-lang-en>Persistence Risk</span><span data-lang-bn hidden>স্থায়িত্ব ঝুঁকি</span></dd>
+    <dt>L</dt>
+    <dd><span data-lang-en>Language-related Variation</span><span data-lang-bn hidden>ভাষা-সম্পর্কিত ভিন্নতা</span></dd>
+  </dl>
+
+  <h3>
+    <span data-lang-en>Initial Risk Levels</span>
+    <span data-lang-bn hidden>প্রাথমিক ঝুঁকি স্তর</span>
+  </h3>
+  <div class="risk-levels">
+    <span class="risk-badge low"><span data-lang-en>Low</span><span data-lang-bn hidden>নিম্ন</span></span>
+    <span class="risk-badge medium"><span data-lang-en>Medium</span><span data-lang-bn hidden>মধ্যম</span></span>
+    <span class="risk-badge high"><span data-lang-en>High</span><span data-lang-bn hidden>উচ্চ</span></span>
+    <span class="risk-badge critical"><span data-lang-en>Critical</span><span data-lang-bn hidden>সংকটপূর্ণ</span></span>
+  </div>
+
+  <p data-lang-en>Weights and thresholds should be refined using experimental evidence.</p>
+  <p data-lang-bn hidden>ওজন ও থ্রেশহোল্ড পরীক্ষামূলক প্রমাণ ব্যবহার করে পরিমার্জিত করা উচিত।</p>
+
+  <h3>
+    <span data-lang-en>Memory Risk Assessment Model — Flow</span>
+    <span data-lang-bn hidden>স্মৃতি-ঝুঁকি মূল্যায়ন মডেল — প্রবাহ</span>
+  </h3>
+  <figure class="mrs" aria-label="Memory Risk Assessment model flow">
+    <div class="arch-node highlight">
+      <div class="arch-node-title"><span data-lang-en>Memory Risk Assessment</span><span data-lang-bn hidden>স্মৃতি-ঝুঁকি মূল্যায়ন</span></div>
+    </div>
+    <div class="arch-arrow"></div>
+    <div class="mrs-branches">
+      <div class="mrs-branch"><span data-lang-en>Integrity Risk</span><span data-lang-bn hidden>অখণ্ডতা ঝুঁকি</span></div>
+      <div class="mrs-branch"><span data-lang-en>Provenance Risk</span><span data-lang-bn hidden>উৎস-প্রমাণ ঝুঁকি</span></div>
+      <div class="mrs-branch"><span data-lang-en>Behavioural Anomaly</span><span data-lang-bn hidden>আচরণগত অসঙ্গতি</span></div>
+      <div class="mrs-branch"><span data-lang-en>Persistence Risk</span><span data-lang-bn hidden>স্থায়িত্ব ঝুঁকি</span></div>
+      <div class="mrs-branch"><span data-lang-en>Language-related Variation</span><span data-lang-bn hidden>ভাষা-সম্পর্কিত ভিন্নতা</span></div>
+    </div>
+    <div class="arch-arrow"></div>
+    <div class="arch-node">
+      <div class="arch-node-title"><span data-lang-en>Combined Risk Analysis</span><span data-lang-bn hidden>সম্মিলিত ঝুঁকি বিশ্লেষণ</span></div>
+    </div>
+    <div class="arch-arrow"></div>
+    <div class="arch-node">
+      <div class="arch-node-title"><span data-lang-en>Risk Assessment Output</span><span data-lang-bn hidden>ঝুঁকি মূল্যায়ন ফলাফল</span></div>
+    </div>
+    <div class="arch-arrow"></div>
+    <div class="arch-levels">
+      <span class="arch-level low"><span data-lang-en>Low</span><span data-lang-bn hidden>নিম্ন</span></span>
+      <span class="arch-level med"><span data-lang-en>Medium</span><span data-lang-bn hidden>মধ্যম</span></span>
+      <span class="arch-level high"><span data-lang-en>High</span><span data-lang-bn hidden>উচ্চ</span></span>
+      <span class="arch-level crit"><span data-lang-en>Critical</span><span data-lang-bn hidden>সংকটপূর্ণ</span></span>
+    </div>
+    <div class="arch-arrow"></div>
+    <div class="mrs-actions">
+      <div class="mrs-action"><span data-lang-en>Monitoring</span><span data-lang-bn hidden>পর্যবেক্ষণ</span></div>
+      <div class="mrs-action"><span data-lang-en>Additional Verification</span><span data-lang-bn hidden>অতিরিক্ত যাচাই</span></div>
+      <div class="mrs-action"><span data-lang-en>Controlled Isolation</span><span data-lang-bn hidden>নিয়ন্ত্রিত বিচ্ছিন্নকরণ</span></div>
+      <div class="mrs-action"><span data-lang-en>Recovery & Integrity Validation</span><span data-lang-bn hidden>পুনরুদ্ধার ও অখণ্ডতা যাচাই</span></div>
+    </div>
+  </figure>
+</section>
+
+<!-- 15. RESPONSE, RECOVERY, AND RESILIENCE -->
+<section id="response" class="section">
+  <header class="section-header">
+    <div class="section-number">15</div>
+    <h2>
+      <span data-lang-en>Response, Recovery, and Resilience</span>
+      <span data-lang-bn hidden>সাড়া, পুনরুদ্ধার ও সহনশীলতা</span>
+    </h2>
+  </header>
+
+  <ul data-lang-en>
+    <li><strong>Low:</strong> monitor and collect evidence.</li>
+    <li><strong>Medium:</strong> additional verification and source validation.</li>
+    <li><strong>High:</strong> controlled isolation of suspicious experimental state.</li>
+    <li><strong>Critical:</strong> controlled recovery and integrity validation.</li>
+  </ul>
+  <ul data-lang-bn hidden>
+    <li><strong>নিম্ন:</strong> পর্যবেক্ষণ এবং প্রমাণ সংগ্রহ।</li>
+    <li><strong>মধ্যম:</strong> অতিরিক্ত যাচাই এবং উৎস বৈধতা।</li>
+    <li><strong>উচ্চ:</strong> সন্দেহজনক পরীক্ষামূলক অবস্থার নিয়ন্ত্রিত বিচ্ছিন্নকরণ।</li>
+    <li><strong>সংকটপূর্ণ:</strong> নিয়ন্ত্রিত পুনরুদ্ধার এবং অখণ্ডতা যাচাই।</li>
+  </ul>
+
+  <p data-lang-en>Recovery evaluates isolation, restoration from a trusted baseline, post-recovery integrity, and confirmation of normal behaviour.</p>
+  <p data-lang-bn hidden>পুনরুদ্ধার বিচ্ছিন্নকরণ, বিশ্বস্ত ভিত্তিরেখা থেকে পুনঃস্থাপন, পুনরুদ্ধার-পরবর্তী অখণ্ডতা এবং স্বাভাবিক আচরণের নিশ্চিতকরণ মূল্যায়ন করে।</p>
+</section>
+
+<!-- 16. EVALUATION METRICS -->
+<section id="metrics" class="section">
+  <header class="section-header">
+    <div class="section-number">16</div>
+    <h2>
+      <span data-lang-en>Evaluation Metrics</span>
+      <span data-lang-bn hidden>মূল্যায়ন মেট্রিক</span>
+    </h2>
+  </header>
+
+  <div data-lang-en>
+    <p><strong>Predictive:</strong> Detection Lead Time, True Positive Rate, False Positive Rate, Missed Detection Rate, Signal Consistency.</p>
+    <p><strong>System:</strong> Baseline Deviation, Retrieval Consistency, Memory Persistence Behaviour.</p>
+    <p><strong>Recovery:</strong> Recovery Success Rate, Time to Restore Trusted State, Post-Recovery Integrity, Post-Recovery Behaviour Consistency.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p><strong>পূর্বানুমানমূলক:</strong> শনাক্তকরণের সতর্ক-সময়, সত্য-ধনাত্মক হার, মিথ্যা-ধনাত্মক হার, মিসড ডিটেকশন হার, সংকেত ধারাবাহিকতা।</p>
+    <p><strong>সিস্টেম:</strong> ভিত্তিরেখা বিচ্যুতি, পুনরুদ্ধার ধারাবাহিকতা, স্মৃতি-স্থায়িত্ব আচরণ।</p>
+    <p><strong>পুনরুদ্ধার:</strong> পুনরুদ্ধার-সফলতার হার, বিশ্বস্ত অবস্থা পুনঃস্থাপনের সময়, পুনরুদ্ধার-পরবর্তী অখণ্ডতা, পুনরুদ্ধার-পরবর্তী আচরণ ধারাবাহিকতা।</p>
+  </div>
+</section>
+
+<!-- 17. RESEARCH PHASES -->
+<section id="phases" class="section">
+  <header class="section-header">
+    <div class="section-number">17</div>
+    <h2>
+      <span data-lang-en>Research Phases</span>
+      <span data-lang-bn hidden>গবেষণা পর্ব</span>
+    </h2>
+  </header>
+
+  <ol class="phases">
+    <li class="phase">
+      <span class="phase-num">1</span>
+      <div class="phase-body"><span class="phase-title"><span data-lang-en>Baseline Establishment</span><span data-lang-bn hidden>ভিত্তিরেখা প্রতিষ্ঠা</span></span></div>
+    </li>
+    <li class="phase">
+      <span class="phase-num">2</span>
+      <div class="phase-body"><span class="phase-title"><span data-lang-en>Controlled Scenario Execution</span><span data-lang-bn hidden>নিয়ন্ত্রিত দৃশ্যকল্প সম্পাদন</span></span></div>
+    </li>
+    <li class="phase">
+      <span class="phase-num">3</span>
+      <div class="phase-body"><span class="phase-title"><span data-lang-en>Telemetry Collection and Analysis</span><span data-lang-bn hidden>টেলিমেট্রি সংগ্রহ ও বিশ্লেষণ</span></span></div>
+    </li>
+    <li class="phase">
+      <span class="phase-num">4</span>
+      <div class="phase-body"><span class="phase-title"><span data-lang-en>Memory Risk Assessment</span><span data-lang-bn hidden>স্মৃতি-ঝুঁকি মূল্যায়ন</span></span></div>
+    </li>
+    <li class="phase">
+      <span class="phase-num">5</span>
+      <div class="phase-body"><span class="phase-title"><span data-lang-en>Response and Recovery Evaluation</span><span data-lang-bn hidden>সাড়া ও পুনরুদ্ধার মূল্যায়ন</span></span></div>
+    </li>
+    <li class="phase">
+      <span class="phase-num">6</span>
+      <div class="phase-body"><span class="phase-title"><span data-lang-en>Comparative Evaluation</span><span data-lang-bn hidden>তুলনামূলক মূল্যায়ন</span></span></div>
+    </li>
+  </ol>
+
+  <h3>
+    <span data-lang-en>Comparison</span>
+    <span data-lang-bn hidden>তুলনা</span>
+  </h3>
+  <div class="comparison">
+    <div class="comp-cell"><span data-lang-en>Baseline</span><span data-lang-bn hidden>ভিত্তিরেখা</span></div>
+    <div class="comp-cell"><span data-lang-en>Experimental State</span><span data-lang-bn hidden>পরীক্ষামূলক অবস্থা</span></div>
+    <div class="comp-cell"><span data-lang-en>Post-Recovery State</span><span data-lang-bn hidden>পুনরুদ্ধার-পরবর্তী অবস্থা</span></div>
+  </div>
+</section>
+
+<!-- 18. EXAMPLES -->
+<section id="examples" class="section">
+  <header class="section-header">
+    <div class="section-number">18</div>
+    <h2>
+      <span data-lang-en>Examples</span>
+      <span data-lang-bn hidden>উদাহরণ</span>
+    </h2>
+  </header>
+
+  <h3>
+    <span data-lang-en>Example 1</span>
+    <span data-lang-bn hidden>উদাহরণ ১</span>
+  </h3>
+  <p data-lang-en>Normal behaviour → source/provenance change → retrieval deviation → response drift → persistent impact. The research evaluates whether earlier changes provided measurable warning.</p>
+  <p data-lang-bn hidden>স্বাভাবিক আচরণ → উৎস/উৎস-প্রমাণ পরিবর্তন → পুনরুদ্ধার বিচ্যুতি → প্রতিক্রিয়া বিচ্যুতি → স্থায়ী প্রভাব। গবেষণাটি মূল্যায়ন করে যে পূর্ববর্তী পরিবর্তনগুলো পরিমাপযোগ্য সতর্কতা দিয়েছে কি না।</p>
+
+  <h3>
+    <span data-lang-en>Example 2</span>
+    <span data-lang-bn hidden>উদাহরণ ২</span>
+  </h3>
+  <p data-lang-en>Bengali, Banglish, and mixed-language queries behave consistently at baseline, but repeated differences appear during controlled experiments. The research evaluates whether the language-related pattern is a useful predictive signal.</p>
+  <p data-lang-bn hidden>ভিত্তিরেখায় বাংলা, বাংলিশ ও মিশ্র-ভাষার প্রশ্নগুলো ধারাবাহিকভাবে আচরণ করে, কিন্তু নিয়ন্ত্রিত পরীক্ষার সময় বারবার পার্থক্য দেখা যায়। গবেষণাটি মূল্যায়ন করে যে ভাষা-সম্পর্কিত প্যাটার্নটি কার্যকর পূর্বানুমানমূলক সংকেত কি না।</p>
+</section>
+
+<!-- 19. EXPECTED CONTRIBUTION -->
+<section id="contribution" class="section">
+  <header class="section-header">
+    <div class="section-number">19</div>
+    <h2>
+      <span data-lang-en>Expected Contribution</span>
+      <span data-lang-bn hidden>প্রত্যাশিত অবদান</span>
+    </h2>
+  </header>
+  <p data-lang-en>The contribution is a measurable framework for assessing whether observable integrity, provenance, behavioural, persistence, and language-related signals can provide early indications of memory-related security risks in AI systems. ShorbornoAI serves as the controlled Bengali/Banglish evaluation environment.</p>
+  <p data-lang-bn hidden>অবদানটি হলো একটি পরিমাপযোগ্য কাঠামো, যা মূল্যায়ন করে যে পর্যবেক্ষণযোগ্য অখণ্ডতা, উৎস-প্রমাণ, আচরণগত, স্থায়িত্ব ও ভাষা-সম্পর্কিত সংকেতগুলো এআই সিস্টেমে স্মৃতি-সম্পর্কিত নিরাপত্তা ঝুঁকির প্রাথমিক ইঙ্গিত দিতে পারে কি না। শরবর্ণএআই নিয়ন্ত্রিত বাংলা/বাংলিশ মূল্যায়ন পরিবেশ হিসেবে কাজ করে।</p>
+</section>
+
+<!-- 20. RESEARCH INTEGRITY PRINCIPLES -->
+<section id="integrity" class="section">
+  <header class="section-header">
+    <div class="section-number">20</div>
+    <h2>
+      <span data-lang-en>Research Integrity Principles</span>
+      <span data-lang-bn hidden>গবেষণা অখণ্ডতার নীতি</span>
+    </h2>
+  </header>
+  <ul data-lang-en>
+    <li>Keep experiments isolated from production systems.</li>
+    <li>Keep trusted baseline data separate from experimental data.</li>
+    <li>Record time-stamped evidence.</li>
+    <li>Distinguish measured results from assumptions and inference.</li>
+    <li>Report false positives, missed detections, and limitations.</li>
+    <li>Do not claim predictive effectiveness unless evaluation evidence supports it.</li>
+  </ul>
+  <ul data-lang-bn hidden>
+    <li>পরীক্ষাগুলো প্রোডাকশন সিস্টেম থেকে বিচ্ছিন্ন রাখুন।</li>
+    <li>বিশ্বস্ত ভিত্তিরেখা ডেটা পরীক্ষামূলক ডেটা থেকে পৃথক রাখুন।</li>
+    <li>সময়-চিহ্নিত প্রমাণ রেকর্ড করুন।</li>
+    <li>পরিমাপকৃত ফলাফলকে অনুমান ও অনুমিতি থেকে পৃথক করুন।</li>
+    <li>মিথ্যা-ধনাত্মক, মিসড ডিটেকশন এবং সীমাবদ্ধতা প্রতিবেদন করুন।</li>
+    <li>মূল্যায়ন প্রমাণ সমর্থন না করলে পূর্বানুমানমূলক কার্যকারিতা দাবি করবেন না।</li>
+  </ul>
+</section>
+
+<!-- 21. FINAL RESEARCH POSITION -->
+<section id="position" class="section">
+  <header class="section-header">
+    <div class="section-number">21</div>
+    <h2>
+      <span data-lang-en>Final Research Position</span>
+      <span data-lang-bn hidden>চূড়ান্ত গবেষণা অবস্থান</span>
+    </h2>
+  </header>
+
+  <ol class="sequence">
+    <li><span data-lang-en>Predictive Detection</span><span data-lang-bn hidden>পূর্বানুমানমূলক শনাক্তকরণ</span></li>
+    <li><span data-lang-en>Risk Assessment</span><span data-lang-bn hidden>ঝুঁকি মূল্যায়ন</span></li>
+    <li><span data-lang-en>Response</span><span data-lang-bn hidden>সাড়া</span></li>
+    <li><span data-lang-en>Recovery</span><span data-lang-bn hidden>পুনরুদ্ধার</span></li>
+    <li><span data-lang-en>Resilience</span><span data-lang-bn hidden>সহনশীলতা</span></li>
+  </ol>
+
+  <h3>
+    <span data-lang-en>The Central Question</span>
+    <span data-lang-bn hidden>কেন্দ্রীয় প্রশ্ন</span>
+  </h3>
+  <p data-lang-en>Were there measurable warning signals before significant impact, could those signals provide useful early warning, and could evidence-based response and recovery reduce the resulting impact?</p>
+  <p data-lang-bn hidden>উল্লেখযোগ্য প্রভাবের পূর্বে কি পরিমাপযোগ্য সতর্কতা সংকেত ছিল, সেই সংকেতগুলো কি কার্যকর প্রাথমিক সতর্কতা দিতে পারত, এবং প্রমাণ-ভিত্তিক সাড়া ও পুনরুদ্ধার কি ফলস্বরূপ প্রভাব কমাতে পারত?</p>
+</section>
+
+<!-- 22. CHAPTER 2: LITERATURE REVIEW (Detailed Reference) -->
+<section id="chapter2" class="section">
+  <header class="section-header">
+    <div class="section-number">22</div>
+    <h2>
+      <span data-lang-en>Chapter 2: Literature Review — AI Risk and Trustworthiness</span>
+      <span data-lang-bn hidden>অধ্যায় ২: সাহিত্য পর্যালোচনা — এআই ঝুঁকি ও বিশ্বস্ততা</span>
+    </h2>
+  </header>
+
+  <!-- 2.1 -->
+  <h3>
+    <span data-lang-en>2.1 Introduction</span>
+    <span data-lang-bn hidden>২.১ ভূমিকা</span>
+  </h3>
+  <div data-lang-en>
+    <p>Artificial intelligence (AI) systems are increasingly used to process information, support decisions, and interact with users across different domains. As these systems become more capable and are used over longer periods, their security and trustworthiness become important concerns. An AI system may produce an incorrect response during a single interaction, but risks can become more complex when information is retained and influences later interactions. Therefore, the security of information stored or maintained by an AI system deserves attention alongside the security of its models, applications, and operating environment.</p>
+    <p>This chapter reviews literature and established frameworks related to AI risk management, AI trustworthiness, information integrity, provenance, persistent memory security, predictive risk assessment, and cyber resilience. It establishes the academic foundation for examining whether observable signals can provide early indications of emerging memory-related security risks. It also considers language variation as an evaluation dimension for the ShorbornoAI Bengali Knowledge Platform.</p>
+    <p>The chapter draws on international frameworks and standards, including the NIST AI Risk Management Framework, the NIST Cybersecurity Framework, ISO/IEC 23894, ISO/IEC 42001, the OECD AI Principles, and UNESCO's Recommendation on the Ethics of Artificial Intelligence. It also considers emerging research on persistent memory risks in AI-agent systems. These sources provide the basis for identifying the research problem and defining the proposed study's contribution.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>কৃত্রিম বুদ্ধিমত্তা (এআই) সিস্টেমগুলো ক্রমবর্ধমানভাবে বিভিন্ন ক্ষেত্রে তথ্য প্রক্রিয়াকরণ, সিদ্ধান্ত সমর্থন এবং ব্যবহারকারীদের সঙ্গে মিথস্ক্রিয়া করতে ব্যবহৃত হচ্ছে। এই সিস্টেমগুলো যত বেশি সক্ষম এবং দীর্ঘ সময় ধরে ব্যবহৃত হচ্ছে, তাদের নিরাপত্তা ও বিশ্বস্ততা তত গুরুত্বপূর্ণ উদ্বেগে পরিণত হচ্ছে। একটি এআই সিস্টেম একক মিথস্ক্রিয়ায় ভুল প্রতিক্রিয়া দিতে পারে, কিন্তু তথ্য ধরে রাখা হলে এবং তা পরবর্তী মিথস্ক্রিয়াকে প্রভাবিত করলে ঝুঁকি আরও জটিল হয়ে উঠতে পারে। তাই একটি এআই সিস্টেমের সংরক্ষিত বা রক্ষণাবেক্ষণকৃত তথ্যের নিরাপত্তা তার মডেল, অ্যাপ্লিকেশন ও পরিচালন-পরিবেশের নিরাপত্তার পাশাপাশি মনোযোগ দাবি করে।</p>
+    <p>এই অধ্যায়ে এআই ঝুঁকি ব্যবস্থাপনা, এআই বিশ্বস্ততা, তথ্য-অখণ্ডতা, উৎস-প্রমাণ, স্থায়ী স্মৃতি নিরাপত্তা, পূর্বানুমানমূলক ঝুঁকি মূল্যায়ন এবং সাইবার সহনশীলতা সম্পর্কিত সাহিত্য ও প্রতিষ্ঠিত কাঠামো পর্যালোচনা করা হয়েছে। এটি এই পরীক্ষার একাডেমিক ভিত্তি প্রতিষ্ঠা করে যে পর্যবেক্ষণযোগ্য সংকেতগুলো উদীয়মান স্মৃতি-সম্পর্কিত নিরাপত্তা ঝুঁকির প্রাথমিক ইঙ্গিত দিতে পারে কি না। এটি শরবর্ণএআই বাংলা নলেজ প্ল্যাটফর্মের জন্য মূল্যায়ন-মাত্রা হিসেবে ভাষা-ভিন্নতাও বিবেচনা করে।</p>
+    <p>অধ্যায়টি আন্তর্জাতিক কাঠামো ও মান থেকে উপাদান গ্রহণ করে, যার মধ্যে রয়েছে NIST এআই ঝুঁকি ব্যবস্থাপনা কাঠামো, NIST সাইবার নিরাপত্তা কাঠামো, ISO/IEC 23894, ISO/IEC 42001, OECD এআই নীতি এবং কৃত্রিম বুদ্ধিমত্তার নীতিশাস্ত্র সম্পর্কিত ইউনেস্কো সুপারিশ। এটি এআই-এজেন্ট সিস্টেমে স্থায়ী স্মৃতি ঝুঁকি নিয়ে উদীয়মান গবেষণাও বিবেচনা করে। এই উৎসগুলো গবেষণা-সমস্যা চিহ্নিত করতে এবং প্রস্তাবিত গবেষণার অবদান সংজ্ঞায়িত করতে ভিত্তি প্রদান করে।</p>
+  </div>
+
+  <!-- 2.2 -->
+  <h3>
+    <span data-lang-en>2.2 AI Risk</span>
+    <span data-lang-bn hidden>২.২ এআই ঝুঁকি</span>
+  </h3>
+  <div data-lang-en>
+    <p>AI risk refers to the possibility that an AI system may produce harmful, unreliable, insecure, unfair, or otherwise undesirable outcomes in a particular context. Such risks may arise during system development, deployment, operation, maintenance, or retirement. They may also result from interactions between the AI system, its data, users, connected services, and operating environment.</p>
+    <p>AI risks can be considered across several related areas. Data-related risks include inaccurate, incomplete, outdated, or unauthorised information. Model-related risks may arise from limitations in model behaviour or unexpected outputs. Security risks include unauthorised access, disclosure, modification, or disruption. Privacy risks concern the inappropriate collection, retention, or exposure of personal information. Operational and governance risks may arise from inadequate monitoring, unclear responsibilities, or insufficient change control.</p>
+    <p>This study gives particular attention to memory-related risks. In an AI system, retained information may influence future responses or actions. If inaccurate, untrusted, or unauthorised information becomes part of persistent memory, its effects may continue beyond the interaction in which it was introduced. The resulting impact may be delayed, repeated, or cumulative. For this reason, memory-related risks should be examined not only as isolated data changes but also in relation to their persistence and possible influence on later system behaviour.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এআই ঝুঁকি বলতে সেই সম্ভাবনাকে বোঝায় যে একটি এআই সিস্টেম একটি নির্দিষ্ট প্রেক্ষাপটে ক্ষতিকর, অবিশ্বস্ত, অনিরাপদ, অন্যায্য বা অন্যথায় অবাঞ্ছিত ফলাফল তৈরি করতে পারে। এই ধরনের ঝুঁকি সিস্টেম উন্নয়ন, স্থাপন, পরিচালনা, রক্ষণাবেক্ষণ বা অবসরের সময় দেখা দিতে পারে। এগুলো এআই সিস্টেম, তার ডেটা, ব্যবহারকারী, সংযুক্ত সেবা এবং পরিচালন-পরিবেশের মধ্যে মিথস্ক্রিয়া থেকেও উদ্ভূত হতে পারে।</p>
+    <p>এআই ঝুঁকি কয়েকটি সম্পর্কিত ক্ষেত্র জুড়ে বিবেচনা করা যায়। ডেটা-সম্পর্কিত ঝুঁকির মধ্যে রয়েছে ভুল, অসম্পূর্ণ, পুরনো বা অননুমোদিত তথ্য। মডেল-সম্পর্কিত ঝুঁকি মডেলের আচরণের সীমাবদ্ধতা বা অপ্রত্যাশিত আউটপুট থেকে উদ্ভূত হতে পারে। নিরাপত্তা ঝুঁকির মধ্যে রয়েছে অননুমোদিত প্রবেশ, প্রকাশ, পরিবর্তন বা বাধা। গোপনীয়তা ঝুঁকি ব্যক্তিগত তথ্যের অনুপযুক্ত সংগ্রহ, ধারণ বা প্রকাশের সঙ্গে সম্পর্কিত। পরিচালনাগত ও শাসন-সংক্রান্ত ঝুঁকি অপর্যাপ্ত পর্যবেক্ষণ, অস্পষ্ট দায়িত্ব বা অপর্যাপ্ত পরিবর্তন-নিয়ন্ত্রণ থেকে উদ্ভূত হতে পারে।</p>
+    <p>এই গবেষণা স্মৃতি-সম্পর্কিত ঝুঁকির প্রতি বিশেষ মনোযোগ দেয়। একটি এআই সিস্টেমে ধরে রাখা তথ্য ভবিষ্যতের প্রতিক্রিয়া বা কার্যকে প্রভাবিত করতে পারে। যদি ভুল, অবিশ্বস্ত বা অননুমোদিত তথ্য স্থায়ী স্মৃতির অংশ হয়ে যায়, তবে এর প্রভাব যে মিথস্ক্রিয়ায় এটি প্রবেশ করেছিল তার বাইরেও চলতে পারে। ফলস্বরূপ প্রভাব বিলম্বিত, পুনরাবৃত্ত বা সঞ্চিত হতে পারে। এই কারণে, স্মৃতি-সম্পর্কিত ঝুঁকিগুলো কেবল বিচ্ছিন্ন ডেটা-পরিবর্তন হিসেবে নয়, বরং তাদের স্থায়িত্ব এবং পরবর্তী সিস্টেম-আচরণে সম্ভাব্য প্রভাবের সাপেক্ষে পরীক্ষা করা উচিত।</p>
+  </div>
+
+  <!-- 2.3 -->
+  <h3>
+    <span data-lang-en>2.3 AI Trustworthiness</span>
+    <span data-lang-bn hidden>২.৩ এআই বিশ্বস্ততা</span>
+  </h3>
+  <div data-lang-en>
+    <p>AI trustworthiness concerns whether an AI system can be relied upon to operate appropriately, securely, and consistently within its intended context. Trustworthiness should not be determined only by whether users consider a system useful or whether it produces acceptable answers in ordinary conditions. It should be assessed using evidence about the system's reliability, safety, security, transparency, privacy, fairness, and accountability.</p>
+    <p>The NIST AI Risk Management Framework (AI RMF 1.0) identifies characteristics associated with trustworthy AI, including validity and reliability; safety; security and resilience; accountability and transparency; explainability and interpretability; privacy enhancement; and fairness with harmful bias managed (NIST, 2023). These characteristics provide a useful foundation for evaluating AI systems throughout their lifecycle.</p>
+    <p>Several of these characteristics are directly relevant to this research. Validity and reliability relate to whether system behaviour remains consistent with an established baseline. Security and resilience relate to whether the system can withstand, respond to, and recover from adverse conditions. Transparency and accountability relate to whether relevant changes and decisions can be examined. Privacy enhancement is relevant because memory-related experiments should avoid unnecessary exposure of personal or sensitive information.</p>
+    <p>The proposed study does not attempt to measure every dimension of AI trustworthiness. Instead, it focuses on selected characteristics that can be examined through memory integrity, information provenance, behavioural consistency, persistence, early warning, and recovery measurements.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এআই বিশ্বস্ততা এই প্রশ্নের সঙ্গে সম্পর্কিত যে একটি এআই সিস্টেমকে তার অভিপ্রেত প্রেক্ষাপটে যথাযথ, নিরাপদ ও ধারাবাহিকভাবে পরিচালনার জন্য নির্ভর করা যায় কি না। বিশ্বস্ততা কেবল এই ভিত্তিতে নির্ধারণ করা উচিত নয় যে ব্যবহারকারীরা সিস্টেমটিকে উপযোগী মনে করেন কি না বা এটি সাধারণ পরিস্থিতিতে গ্রহণযোগ্য উত্তর দেয় কি না। এটি সিস্টেমের নির্ভরযোগ্যতা, নিরাপত্তা, সুরক্ষা, স্বচ্ছতা, গোপনীয়তা, ন্যায্যতা এবং জবাবদিহিতা সম্পর্কিত প্রমাণ ব্যবহার করে মূল্যায়ন করা উচিত।</p>
+    <p>NIST এআই ঝুঁকি ব্যবস্থাপনা কাঠামো (AI RMF 1.0) বিশ্বস্ত এআই-এর সঙ্গে যুক্ত বৈশিষ্ট্যগুলো চিহ্নিত করে, যার মধ্যে রয়েছে বৈধতা ও নির্ভরযোগ্যতা; সুরক্ষা; নিরাপত্তা ও সহনশীলতা; জবাবদিহিতা ও স্বচ্ছতা; ব্যাখ্যাযোগ্যতা ও বোধগম্যতা; গোপনীয়তা-বর্ধন; এবং ক্ষতিকর পক্ষপাত নিয়ন্ত্রণসহ ন্যায্যতা (NIST, 2023)। এই বৈশিষ্ট্যগুলো এআই সিস্টেমের জীবনচক্র জুড়ে মূল্যায়নের জন্য কার্যকর ভিত্তি প্রদান করে।</p>
+    <p>এই বৈশিষ্ট্যগুলোর কয়েকটি এই গবেষণার সঙ্গে সরাসরি প্রাসঙ্গিক। বৈধতা ও নির্ভরযোগ্যতা এই প্রশ্নের সঙ্গে সম্পর্কিত যে সিস্টেম-আচরণ প্রতিষ্ঠিত ভিত্তিরেখার সঙ্গে সামঞ্জস্যপূর্ণ থাকে কি না। নিরাপত্তা ও সহনশীলতা এই প্রশ্নের সঙ্গে সম্পর্কিত যে সিস্টেম প্রতিকূল অবস্থা সহ্য করতে, সাড়া দিতে এবং পুনরুদ্ধার করতে পারে কি না। স্বচ্ছতা ও জবাবদিহিতা এই প্রশ্নের সঙ্গে সম্পর্কিত যে সংশ্লিষ্ট পরিবর্তন ও সিদ্ধান্ত পরীক্ষা করা যায় কি না। গোপনীয়তা-বর্ধন প্রাসঙ্গিক কারণ স্মৃতি-সম্পর্কিত পরীক্ষায় ব্যক্তিগত বা সংবেদনশীল তথ্যের অপ্রয়োজনীয় প্রকাশ এড়ানো উচিত।</p>
+    <p>প্রস্তাবিত গবেষণা এআই বিশ্বস্ততার প্রতিটি মাত্রা পরিমাপ করার চেষ্টা করে না। বরং এটি নির্বাচিত বৈশিষ্ট্যের উপর মনোযোগ দেয় যা স্মৃতি-অখণ্ডতা, তথ্য-উৎস, আচরণগত ধারাবাহিকতা, স্থায়িত্ব, প্রাথমিক সতর্কতা এবং পুনরুদ্ধার-পরিমাপের মাধ্যমে পরীক্ষা করা যায়।</p>
+  </div>
+
+  <!-- 2.4 -->
+  <h3>
+    <span data-lang-en>2.4 AI Risk Management Frameworks and Standards</span>
+    <span data-lang-bn hidden>২.৪ এআই ঝুঁকি ব্যবস্থাপনা কাঠামো ও মান</span>
+  </h3>
+
+  <h4 data-lang-en>2.4.1 NIST AI Risk Management Framework</h4>
+  <h4 data-lang-bn hidden>২.৪.১ NIST এআই ঝুঁকি ব্যবস্থাপনা কাঠামো</h4>
+  <div data-lang-en>
+    <p>The NIST AI Risk Management Framework provides a structured approach to identifying, assessing, managing, and monitoring risks associated with AI systems. It organises risk-management activities into four functions: Govern, Map, Measure, and Manage (NIST, 2023).</p>
+    <p>The Govern function establishes organisational responsibilities, policies, and oversight. The Map function helps identify the system's context, intended purpose, stakeholders, and potential risks. The Measure function supports the analysis and evaluation of identified risks using appropriate methods and evidence. The Manage function supports prioritising risks and selecting suitable responses.</p>
+    <p>These functions are relevant to the proposed research. Governance can be applied by defining experimental boundaries, responsibilities, and evidence requirements. Mapping can identify memory components, information flows, trust boundaries, and possible risk conditions. Measurement can be used to assess integrity changes, provenance indicators, behavioural deviations, and persistence. Management can guide monitoring, controlled isolation, restoration, and post-recovery validation.</p>
+    <p>The NIST AI RMF therefore provides a recognised risk-management foundation for organising the proposed Memory Risk Assessment Framework. It does not, however, prescribe a specific predictive model for AI memory security. The proposed study will investigate how selected memory-related indicators can be measured within a controlled experimental environment.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>NIST এআই ঝুঁকি ব্যবস্থাপনা কাঠামো এআই সিস্টেমের সঙ্গে যুক্ত ঝুঁকি চিহ্নিত, মূল্যায়ন, ব্যবস্থাপনা ও পর্যবেক্ষণের জন্য একটি কাঠামোবদ্ধ পদ্ধতি প্রদান করে। এটি ঝুঁকি-ব্যবস্থাপনা কার্যক্রমকে চারটি ফাংশনে সংগঠিত করে: Govern, Map, Measure এবং Manage (NIST, 2023)।</p>
+    <p>Govern ফাংশন সাংগঠনিক দায়িত্ব, নীতি ও তত্ত্বাবধান প্রতিষ্ঠা করে। Map ফাংশন সিস্টেমের প্রেক্ষাপট, অভিপ্রেত উদ্দেশ্য, অংশীদার এবং সম্ভাব্য ঝুঁকি চিহ্নিত করতে সহায়তা করে। Measure ফাংশন উপযুক্ত পদ্ধতি ও প্রমাণ ব্যবহার করে চিহ্নিত ঝুঁকির বিশ্লেষণ ও মূল্যায়ন সমর্থন করে। Manage ফাংশন ঝুঁকিকে অগ্রাধিকার দেওয়া এবং উপযুক্ত সাড়া নির্বাচন সমর্থন করে।</p>
+    <p>এই ফাংশনগুলো প্রস্তাবিত গবেষণার জন্য প্রাসঙ্গিক। পরীক্ষামূলক সীমানা, দায়িত্ব এবং প্রমাণ-প্রয়োজনীয়তা সংজ্ঞায়িত করার মাধ্যমে শাসন প্রয়োগ করা যায়। ম্যাপিং স্মৃতি-উপাদান, তথ্য-প্রবাহ, বিশ্বাস-সীমানা এবং সম্ভাব্য ঝুঁকি-অবস্থা চিহ্নিত করতে পারে। পরিমাপ অখণ্ডতা-পরিবর্তন, উৎস-সূচক, আচরণগত বিচ্যুতি এবং স্থায়িত্ব মূল্যায়নে ব্যবহৃত হতে পারে। ব্যবস্থাপনা পর্যবেক্ষণ, নিয়ন্ত্রিত বিচ্ছিন্নকরণ, পুনঃস্থাপন এবং পুনরুদ্ধার-পরবর্তী যাচাই পরিচালনা করতে পারে।</p>
+    <p>এইভাবে NIST এআই RMF প্রস্তাবিত স্মৃতি-ঝুঁকি মূল্যায়ন কাঠামো সংগঠিত করার জন্য একটি স্বীকৃত ঝুঁকি-ব্যবস্থাপনা ভিত্তি প্রদান করে। তবে এটি এআই স্মৃতি নিরাপত্তার জন্য কোনো নির্দিষ্ট পূর্বানুমানমূলক মডেল নির্ধারণ করে না। প্রস্তাবিত গবেষণা তদন্ত করবে যে নির্বাচিত স্মৃতি-সম্পর্কিত সূচকগুলো একটি নিয়ন্ত্রিত পরীক্ষামূলক পরিবেশের মধ্যে কীভাবে পরিমাপ করা যায়।</p>
+  </div>
+
+  <h4 data-lang-en>2.4.2 NIST Generative Artificial Intelligence Profile</h4>
+  <h4 data-lang-bn hidden>২.৪.২ NIST জেনারেটিভ কৃত্রিম বুদ্ধিমত্তা প্রোফাইল</h4>
+  <div data-lang-en>
+    <p>The NIST Generative Artificial Intelligence Profile extends the AI RMF approach to risks associated with generative AI systems (NIST, 2024). It considers risk-management issues across the AI lifecycle and provides guidance for identifying and managing risks arising from the development and use of generative AI.</p>
+    <p>This publication is relevant because the proposed study concerns an AI knowledge platform in which retained information may influence later system behaviour. The profile supports the need to consider information handling, system evaluation, monitoring, and risk controls throughout operation. It is used in this proposal as supporting risk-management guidance rather than as a memory-security framework.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>NIST জেনারেটিভ কৃত্রিম বুদ্ধিমত্তা প্রোফাইল জেনারেটিভ এআই সিস্টেমের সঙ্গে যুক্ত ঝুঁকিতে AI RMF পদ্ধতি প্রসারিত করে (NIST, 2024)। এটি এআই জীবনচক্র জুড়ে ঝুঁকি-ব্যবস্থাপনা বিষয়গুলো বিবেচনা করে এবং জেনারেটিভ এআই-এর উন্নয়ন ও ব্যবহার থেকে উদ্ভূত ঝুঁকি চিহ্নিত ও ব্যবস্থাপনার নির্দেশনা প্রদান করে।</p>
+    <p>এই প্রকাশনা প্রাসঙ্গিক কারণ প্রস্তাবিত গবেষণাটি একটি এআই নলেজ প্ল্যাটফর্ম সম্পর্কিত যেখানে ধরে রাখা তথ্য পরবর্তী সিস্টেম-আচরণকে প্রভাবিত করতে পারে। প্রোফাইলটি পরিচালন-সর্বস্ব তথ্য পরিচালনা, সিস্টেম-মূল্যায়ন, পর্যবেক্ষণ এবং ঝুঁকি-নিয়ন্ত্রণ বিবেচনার প্রয়োজনীয়তাকে সমর্থন করে। এটি এই প্রস্তাবনায় স্মৃতি-নিরাপত্তা কাঠামো হিসেবে নয়, বরং সহায়ক ঝুঁকি-ব্যবস্থাপনা নির্দেশনা হিসেবে ব্যবহৃত হয়েছে।</p>
+  </div>
+
+  <h4 data-lang-en>2.4.3 ISO/IEC 23894:2023</h4>
+  <h4 data-lang-bn hidden>২.৪.৩ ISO/IEC 23894:2023</h4>
+  <div data-lang-en>
+    <p>ISO/IEC 23894:2023 provides guidance for managing risks associated with artificial intelligence. It supports the integration of AI risk management into organisational processes and decision-making (ISO/IEC, 2023a).</p>
+    <p>The standard is relevant to the proposed study because it supports a systematic approach to identifying, analysing, evaluating, treating, and reviewing risks. In the experimental context, this means that test conditions, risk indicators, measurement procedures, and response actions should be documented and applied consistently. The study will use these principles to support a repeatable assessment process.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>ISO/IEC 23894:2023 কৃত্রিম বুদ্ধিমত্তার সঙ্গে যুক্ত ঝুঁকি ব্যবস্থাপনার নির্দেশনা প্রদান করে। এটি সাংগঠনিক প্রক্রিয়া ও সিদ্ধান্ত গ্রহণে এআই ঝুঁকি ব্যবস্থাপনার একীকরণ সমর্থন করে (ISO/IEC, 2023a)।</p>
+    <p>এই মান প্রস্তাবিত গবেষণার জন্য প্রাসঙ্গিক কারণ এটি ঝুঁকি চিহ্নিত, বিশ্লেষণ, মূল্যায়ন, চিকিৎসা ও পুনর্বিবেচনার জন্য একটি পদ্ধতিগত পদ্ধতি সমর্থন করে। পরীক্ষামূলক প্রেক্ষাপটে এর অর্থ হলো পরীক্ষার শর্ত, ঝুঁকি-সূচক, পরিমাপ-পদ্ধতি এবং সাড়া-ব্যবস্থা নথিভুক্ত ও ধারাবাহিকভাবে প্রয়োগ করা উচিত। গবেষণাটি পুনরাবৃত্তিযোগ্য মূল্যায়ন প্রক্রিয়া সমর্থনে এই নীতিগুলো ব্যবহার করবে।</p>
+  </div>
+
+  <h4 data-lang-en>2.4.4 ISO/IEC 42001:2023</h4>
+  <h4 data-lang-bn hidden>২.৪.৪ ISO/IEC 42001:2023</h4>
+  <div data-lang-en>
+    <p>ISO/IEC 42001:2023 specifies requirements for establishing, implementing, maintaining, and continually improving an Artificial Intelligence Management System (ISO/IEC, 2023b). It provides an organisational perspective on AI governance, responsibilities, risk management, monitoring, and continual improvement.</p>
+    <p>The standard is relevant to this research because memory-related security requires clear responsibility for information updates, access, monitoring, and review. It also supports maintaining records that allow system changes and risk-management activities to be examined. ISO/IEC 42001 is a management-system standard; it does not define a particular algorithm for predicting memory-related risks.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>ISO/IEC 42001:2023 একটি কৃত্রিম বুদ্ধিমত্তা ব্যবস্থাপনা সিস্টেম প্রতিষ্ঠা, বাস্তবায়ন, রক্ষণাবেক্ষণ এবং ক্রমাগত উন্নতির প্রয়োজনীয়তা নির্ধারণ করে (ISO/IEC, 2023b)। এটি এআই শাসন, দায়িত্ব, ঝুঁকি ব্যবস্থাপনা, পর্যবেক্ষণ এবং ক্রমাগত উন্নতির সাংগঠনিক দৃষ্টিভঙ্গি প্রদান করে।</p>
+    <p>এই মান এই গবেষণার জন্য প্রাসঙ্গিক কারণ স্মৃতি-সম্পর্কিত নিরাপত্তার জন্য তথ্য-হালনাগাদ, প্রবেশ, পর্যবেক্ষণ এবং পুনর্বিবেচনার স্পষ্ট দায়িত্ব প্রয়োজন। এটি এমন রেকর্ড রক্ষণাবেক্ষণও সমর্থন করে যা সিস্টেম-পরিবর্তন ও ঝুঁকি-ব্যবস্থাপনা কার্যক্রম পরীক্ষা করতে দেয়। ISO/IEC 42001 একটি ব্যবস্থাপনা-সিস্টেম মান; এটি স্মৃতি-সম্পর্কিত ঝুঁকি পূর্বানুমান করার কোনো নির্দিষ্ট অ্যালগরিদম নির্ধারণ করে না।</p>
+  </div>
+
+  <!-- 2.5 -->
+  <h3>
+    <span data-lang-en>2.5 International Principles for Trustworthy AI</span>
+    <span data-lang-bn hidden>২.৫ বিশ্বস্ত এআই-এর আন্তর্জাতিক নীতি</span>
+  </h3>
+
+  <h4 data-lang-en>2.5.1 OECD AI Principles</h4>
+  <h4 data-lang-bn hidden>২.৫.১ OECD এআই নীতি</h4>
+  <div data-lang-en>
+    <p>The OECD AI Principles provide an international policy foundation for the responsible development and use of AI. Their themes include inclusive growth and well-being; human rights, fairness, and privacy; transparency and explainability; robustness, security, and safety; and accountability (OECD, 2019).</p>
+    <p>These principles support the view that AI systems should remain robust and secure throughout their lifecycle and that responsibilities for their operation should be clear. They are relevant to this study because an effective memory-security approach should do more than identify unusual changes. It should also support appropriate oversight, correction, and recovery when a system behaves unexpectedly.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>OECD এআই নীতি এআই-এর দায়িত্বশীল উন্নয়ন ও ব্যবহারের জন্য একটি আন্তর্জাতিক নীতি-ভিত্তি প্রদান করে। এদের বিষয়গুলোর মধ্যে রয়েছে অন্তর্ভুক্তিমূলক প্রবৃদ্ধি ও কল্যাণ; মানবাধিকার, ন্যায্যতা ও গোপনীয়তা; স্বচ্ছতা ও ব্যাখ্যাযোগ্যতা; দৃঢ়তা, নিরাপত্তা ও সুরক্ষা; এবং জবাবদিহিতা (OECD, 2019)।</p>
+    <p>এই নীতিগুলো এই মতকে সমর্থন করে যে এআই সিস্টেমগুলো তাদের জীবনচক্র জুড়ে দৃঢ় ও নিরাপদ থাকা উচিত এবং তাদের পরিচালনার দায়িত্ব স্পষ্ট হওয়া উচিত। এগুলো এই গবেষণার জন্য প্রাসঙ্গিক কারণ একটি কার্যকর স্মৃতি-নিরাপত্তা পদ্ধতিকে অস্বাভাবিক পরিবর্তন চিহ্নিত করার চেয়ে বেশি কিছু করা উচিত। সিস্টেম অপ্রত্যাশিতভাবে আচরণ করলে এটি উপযুক্ত তত্ত্বাবধান, সংশোধন ও পুনরুদ্ধারও সমর্থন করা উচিত।</p>
+  </div>
+
+  <h4 data-lang-en>2.5.2 UNESCO Recommendation on the Ethics of Artificial Intelligence</h4>
+  <h4 data-lang-bn hidden>২.৫.২ কৃত্রিম বুদ্ধিমত্তার নীতিশাস্ত্র সম্পর্কিত ইউনেস্কো সুপারিশ</h4>
+  <div data-lang-en>
+    <p>UNESCO's Recommendation on the Ethics of Artificial Intelligence provides a human-centred framework addressing human rights, transparency, accountability, privacy, data governance, and cultural and linguistic diversity (UNESCO, 2021).</p>
+    <p>The recommendation is relevant to the ShorbornoAI research environment because the study includes Bengali, Banglish, and mixed-language interactions. Language variation may affect how information is expressed, retained, interpreted, or evaluated. Considering these differences can help ensure that the security assessment does not assume that system behaviour is identical across linguistic conditions.</p>
+    <p>The study treats language variation as an experimental dimension. It does not assume in advance that one language condition is less secure than another. Any differences must be established through controlled observations and measured results.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>কৃত্রিম বুদ্ধিমত্তার নীতিশাস্ত্র সম্পর্কিত ইউনেস্কোর সুপারিশ মানবকেন্দ্রিক একটি কাঠামো প্রদান করে যা মানবাধিকার, স্বচ্ছতা, জবাবদিহিতা, গোপনীয়তা, ডেটা শাসন এবং সাংস্কৃতিক ও ভাষাগত বৈচিত্র্যকে সম্বোধন করে (UNESCO, 2021)।</p>
+    <p>এই সুপারিশ শরবর্ণএআই গবেষণা-পরিবেশের জন্য প্রাসঙ্গিক কারণ গবেষণায় বাংলা, বাংলিশ এবং মিশ্র-ভাষার মিথস্ক্রিয়া অন্তর্ভুক্ত। ভাষা-ভিন্নতা তথ্য কীভাবে প্রকাশ, ধারণ, ব্যাখ্যা বা মূল্যায়ন করা হয় তা প্রভাবিত করতে পারে। এই পার্থক্যগুলো বিবেচনা করা এটা নিশ্চিত করতে সহায়তা করে যে নিরাপত্তা-মূল্যায়ন ধরে না নেয় যে সিস্টেম-আচরণ ভাষাগত অবস্থার মধ্যে অভিন্ন।</p>
+    <p>গবেষণাটি ভাষা-ভিন্নতাকে একটি পরীক্ষামূলক মাত্রা হিসেবে বিবেচনা করে। এটি আগে থেকে ধরে না নেয় যে একটি ভাষা-শর্ত অন্যটির চেয়ে কম নিরাপদ। যেকোনো পার্থক্য নিয়ন্ত্রিত পর্যবেক্ষণ ও পরিমাপকৃত ফলাফলের মাধ্যমে প্রতিষ্ঠিত করতে হবে।</p>
+  </div>
+
+  <!-- 2.6 -->
+  <h3>
+    <span data-lang-en>2.6 AI Memory and Persistent Information</span>
+    <span data-lang-bn hidden>২.৬ এআই স্মৃতি ও স্থায়ী তথ্য</span>
+  </h3>
+  <div data-lang-en>
+    <p>AI memory refers to information retained or made available beyond the immediate input and potentially used in later interactions. Depending on the system design, memory may include conversation history, user preferences, summaries, task records, stored knowledge, or other persistent information.</p>
+    <p>Memory can support continuity and context across interactions. At the same time, it creates a security consideration: information retained at one point may influence system behaviour at a later point. The security of memory therefore involves more than whether information can be stored and retrieved. It also involves whether information is accurate, authorised, traceable, consistent, and recoverable.</p>
+    <p>A memory-related issue may be immediate, repeated, persistent, delayed, or cumulative. An immediate issue may affect one interaction. A repeated issue may appear across several interactions. A persistent issue may remain in stored information. A delayed issue may be introduced earlier but become visible only during a later interaction. A cumulative issue may arise when several small changes gradually affect system behaviour.</p>
+    <p>This study focuses on the possibility of observing measurable indicators associated with persistent, delayed, and cumulative memory-related risks. It will examine these conditions through controlled experiments rather than assuming that every memory change represents a security incident.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এআই স্মৃতি বলতে তাৎক্ষণিক ইনপুটের বাইরে সংরক্ষিত বা উপলব্ধ তথ্যকে বোঝায় যা পরবর্তী মিথস্ক্রিয়ায় সম্ভাব্য ব্যবহার করা যেতে পারে। সিস্টেম-নকশার উপর নির্ভর করে স্মৃতিতে কথোপকথনের ইতিহাস, ব্যবহারকারীর পছন্দ, সারাংশ, কাজের রেকর্ড, সংরক্ষিত জ্ঞান বা অন্যান্য স্থায়ী তথ্য থাকতে পারে।</p>
+    <p>স্মৃতি মিথস্ক্রিয়ার মধ্যে ধারাবাহিকতা ও প্রসঙ্গ সমর্থন করতে পারে। একই সঙ্গে, এটি একটি নিরাপত্তা-বিবেচনা তৈরি করে: এক সময়ে ধরে রাখা তথ্য পরবর্তী সময়ে সিস্টেম-আচরণকে প্রভাবিত করতে পারে। তাই স্মৃতির নিরাপত্তা কেবল তথ্য সংরক্ষণ ও পুনরুদ্ধার করা যায় কি না তার চেয়ে বেশি কিছু জড়িত। এতে আরও জড়িত থাকে যে তথ্য সঠিক, অনুমোদিত, ট্রেসযোগ্য, ধারাবাহিক এবং পুনরুদ্ধারযোগ্য কি না।</p>
+    <p>একটি স্মৃতি-সম্পর্কিত সমস্যা তাৎক্ষণিক, পুনরাবৃত্ত, স্থায়ী, বিলম্বিত বা সঞ্চিত হতে পারে। একটি তাৎক্ষণিক সমস্যা একটি মিথস্ক্রিয়াকে প্রভাবিত করতে পারে। একটি পুনরাবৃত্ত সমস্যা 여러 মিথস্ক্রিয়া জুড়ে দেখা দিতে পারে। একটি স্থায়ী সমস্যা সংরক্ষিত তথ্যে থেকে যেতে পারে। একটি বিলম্বিত সমস্যা আগে প্রবেশ করানো হতে পারে কিন্তু কেবল পরবর্তী মিথস্ক্রিয়ার সময় দৃশ্যমান হতে পারে। একটি সঞ্চিত সমস্যা উদ্ভূত হতে পারে যখন কয়েকটি ছোট পরিবর্তন ধীরে ধীরে সিস্টেম-আচরণকে প্রভাবিত করে।</p>
+    <p>এই গবেষণা স্থায়ী, বিলম্বিত ও সঞ্চিত স্মৃতি-সম্পর্কিত ঝুঁকির সঙ্গে যুক্ত পরিমাপযোগ্য সূচক পর্যবেক্ষণের সম্ভাবনার উপর মনোযোগ দেয়। প্রতিটি স্মৃতি-পরিবর্তনকে নিরাপত্তা-ঘটনা হিসেবে ধরে না নিয়ে এটি নিয়ন্ত্রিত পরীক্ষার মাধ্যমে এই অবস্থাগুলো পরীক্ষা করবে।</p>
+  </div>
+
+  <!-- 2.7 -->
+  <h3>
+    <span data-lang-en>2.7 Memory Integrity and Information Provenance</span>
+    <span data-lang-bn hidden>২.৭ স্মৃতি-অখণ্ডতা ও তথ্য-উৎস</span>
+  </h3>
+
+  <h4 data-lang-en>2.7.1 Memory Integrity</h4>
+  <h4 data-lang-bn hidden>২.৭.১ স্মৃতি-অখণ্ডতা</h4>
+  <div data-lang-en>
+    <p>Memory integrity concerns whether retained information remains accurate, authorised, consistent, and protected from unauthorised modification. It may be assessed through several dimensions:</p>
+    <ul>
+      <li>Accuracy: whether retained information corresponds with an appropriate trusted reference.</li>
+      <li>Authenticity: whether the information is associated with its claimed origin.</li>
+      <li>Authorisation: whether the update was permitted.</li>
+      <li>Consistency: whether retained information conflicts with established or verified information.</li>
+      <li>Version integrity: whether previous and current states can be distinguished.</li>
+      <li>Persistence: whether an unexpected change remains across subsequent observations.</li>
+      <li>Recoverability: whether a trusted state can be restored and validated.</li>
+    </ul>
+    <p>Cryptographic hashes can help identify whether a stored record has changed. However, a hash does not prove that the original information was accurate, authorised, or trustworthy. This study therefore distinguishes between detecting a change in stored data and assessing the trustworthiness of the information itself.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>স্মৃতি-অখণ্ডতা এই প্রশ্নের সঙ্গে সম্পর্কিত যে ধরে রাখা তথ্য সঠিক, অনুমোদিত, ধারাবাহিক এবং অননুমোদিত পরিবর্তন থেকে সুরক্ষিত থাকে কি না। এটি কয়েকটি মাত্রার মাধ্যমে মূল্যায়ন করা যায়:</p>
+    <ul>
+      <li>সঠিকতা: ধরে রাখা তথ্য উপযুক্ত বিশ্বস্ত রেফারেন্সের সঙ্গে মেলে কি না।</li>
+      <li>প্রামাণিকতা: তথ্য তার দাবিকৃত উৎসের সঙ্গে যুক্ত কি না।</li>
+      <li>অনুমোদন: হালনাগাদ অনুমোদিত ছিল কি না।</li>
+      <li>ধারাবাহিকতা: ধরে রাখা তথ্য প্রতিষ্ঠিত বা যাচাইকৃত তথ্যের সঙ্গে বিরোধ করে কি না।</li>
+      <li>সংস্করণ-অখণ্ডতা: পূর্ববর্তী ও বর্তমান অবস্থা আলাদা করা যায় কি না।</li>
+      <li>স্থায়িত্ব: অপ্রত্যাশিত পরিবর্তন পরবর্তী পর্যবেক্ষণ জুড়ে থাকে কি না।</li>
+      <li>পুনরুদ্ধারযোগ্যতা: একটি বিশ্বস্ত অবস্থা পুনঃস্থাপন ও যাচাই করা যায় কি না।</li>
+    </ul>
+    <p>ক্রিপ্টোগ্রাফিক হ্যাশ সংরক্ষিত রেকর্ড পরিবর্তিত হয়েছে কি না তা চিহ্নিত করতে সহায়তা করতে পারে। তবে একটি হ্যাশ প্রমাণ করে না যে মূল তথ্য সঠিক, অনুমোদিত বা বিশ্বস্ত ছিল। তাই এই গবেষণা সংরক্ষিত ডেটায় পরিবর্তন শনাক্তকরণ এবং তথ্যের বিশ্বস্ততা মূল্যায়নের মধ্যে পার্থক্য রাখে।</p>
+  </div>
+
+  <h4 data-lang-en>2.7.2 Information Provenance</h4>
+  <h4 data-lang-bn hidden>২.৭.২ তথ্য-উৎস</h4>
+  <div data-lang-en>
+    <p>Information provenance refers to the origin and history of information. A provenance record may include source identity, source type, acquisition time, verification status, processing history, update event, version identifier, and relevant authorisation information.</p>
+    <p>Provenance is important because information with similar content may have different trust levels depending on its origin and verification. A record from a verified source should not automatically be treated as equivalent to a record from an unknown or unverified source.</p>
+    <p>However, provenance alone is insufficient. A correctly identified source may still provide inaccurate information. For this reason, provenance should be considered alongside integrity checks, content validation, authorisation records, and behavioural monitoring.</p>
+    <p>In the proposed framework, provenance-related indicators will be examined to determine whether source identity, verification status, and unexpected source changes contribute useful evidence to memory-risk assessment.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>তথ্য-উৎস তথ্যের মূল ও ইতিহাসকে বোঝায়। একটি উৎস-রেকর্ডে উৎসের পরিচয়, উৎসের ধরন, অর্জনের সময়, যাচাইয়ের অবস্থা, প্রক্রিয়াকরণের ইতিহাস, হালনাগাদ-ঘটনা, সংস্করণ-শনাক্তকারী এবং সংশ্লিষ্ট অনুমোদনের তথ্য থাকতে পারে।</p>
+    <p>উৎস গুরুত্বপূর্ণ কারণ অনুরূপ বিষয়বস্তুসহ তথ্যের উৎস ও যাচাইয়ের উপর নির্ভর করে বিভিন্ন বিশ্বস্ততা-স্তর থাকতে পারে। একটি যাচাইকৃত উৎসের রেকর্ডকে স্বয়ংক্রিয়ভাবে একটি অজানা বা অযাচাইকৃত উৎসের রেকর্ডের সমতুল্য হিসেবে বিবেচনা করা উচিত নয়।</p>
+    <p>তবে, শুধু উৎসই যথেষ্ট নয়। সঠিকভাবে চিহ্নিত উৎসও ভুল তথ্য দিতে পারে। এই কারণে, উৎসকে অখণ্ডতা-যাচাই, বিষয়বস্তু-বৈধতা, অনুমোদন-রেকর্ড এবং আচরণগত পর্যবেক্ষণের পাশাপাশি বিবেচনা করা উচিত।</p>
+    <p>প্রস্তাবিত কাঠামোতে উৎস-সম্পর্কিত সূচক পরীক্ষা করা হবে এই নির্ধারণ করতে যে উৎসের পরিচয়, যাচাইয়ের অবস্থা এবং অপ্রত্যাশিত উৎস-পরিবর্তন স্মৃতি-ঝুঁকি মূল্যায়নে কার্যকর প্রমাণ দেয় কি না।</p>
+  </div>
+
+  <!-- 2.8 -->
+  <h3>
+    <span data-lang-en>2.8 Emerging Research on Memory-Related Security Risks</span>
+    <span data-lang-bn hidden>২.৮ স্মৃতি-সম্পর্কিত নিরাপত্তা ঝুঁকিতে উদীয়মান গবেষণা</span>
+  </h3>
+  <div data-lang-en>
+    <p>Recent research on AI-agent systems has begun to examine how untrusted or malicious information may become persistent memory and influence later system behaviour. These studies indicate that memory-related security problems may extend beyond a single interaction.</p>
+    <p>Dash et al. (2026), in their work titled "From Untrusted Input to Trusted Memory: A Systematic Study of Memory Poisoning Attacks in LLM Agents," examine ways in which untrusted information can enter persistent memory and affect AI-agent behaviour. This work is relevant because it identifies memory as a security-relevant component and provides a basis for considering memory updates, information trust, and persistence as experimental concerns.</p>
+    <p>Huang, Zhang, and Jia (2026), in "When Malicious Instructions Persist: Persistent Memory Poisoning Attack on Harness-Based Agents," examine how instructions retained in memory may influence later sessions. The time gap between the introduction of information and its later effect is relevant to the present study's interest in delayed and persistent risk.</p>
+    <p>Zhang et al. (2025), in "Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-Based Agents," present a structured approach to evaluating security conditions and defensive measures in AI-agent systems. This work supports the importance of repeatable test scenarios and measurable evaluation.</p>
+    <p>These publications provide useful technical context, but their research emphasis is not identical to the proposed study. The present research will focus on whether a combination of observable memory-related indicators can provide useful early warning and how response and recovery can be measured against a trusted baseline.</p>
+    <p>The 2026 studies listed above are recent preprints. Their publication status and bibliographic details should be checked again before final submission. Their findings should be described cautiously and should not be presented as established consensus.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এআই-এজেন্ট সিস্টেম নিয়ে সাম্প্রতিক গবেষণা পরীক্ষা করতে শুরু করেছে যে অবিশ্বস্ত বা ক্ষতিকর তথ্য কীভাবে স্থায়ী স্মৃতিতে পরিণত হতে পারে এবং পরবর্তী সিস্টেম-আচরণকে প্রভাবিত করতে পারে। এই গবেষণাগুলো ইঙ্গিত দেয় যে স্মৃতি-সম্পর্কিত নিরাপত্তা সমস্যা একক মিথস্ক্রিয়ার বাইরেও বিস্তৃত হতে পারে।</p>
+    <p>Dash এবং সহকর্মীরা (2026), "From Untrusted Input to Trusted Memory: A Systematic Study of Memory Poisoning Attacks in LLM Agents" শিরোনামের কাজে, কীভাবে অবিশ্বস্ত তথ্য স্থায়ী স্মৃতিতে প্রবেশ করতে পারে এবং এআই-এজেন্ট আচরণকে প্রভাবিত করতে পারে তা পরীক্ষা করেন। এই কাজ প্রাসঙ্গিক কারণ এটি স্মৃতিকে নিরাপত্তা-সংশ্লিষ্ট উপাদান হিসেবে চিহ্নিত করে এবং স্মৃতি-হালনাগাদ, তথ্য-বিশ্বাস ও স্থায়িত্বকে পরীক্ষামূলক বিষয় হিসেবে বিবেচনার ভিত্তি প্রদান করে।</p>
+    <p>Huang, Zhang এবং Jia (2026), "When Malicious Instructions Persist: Persistent Memory Poisoning Attack on Harness-Based Agents" শিরোনামে, পরীক্ষা করেন যে স্মৃতিতে ধরে রাখা নির্দেশনা কীভাবে পরবর্তী সেশনকে প্রভাবিত করতে পারে। তথ্য প্রবেশ করানো এবং পরবর্তী প্রভাবের মধ্যে সময়ের ব্যবধান বিলম্বিত ও স্থায়ী ঝুঁকিতে বর্তমান গবেষণার আগ্রহের সঙ্গে প্রাসঙ্গিক।</p>
+    <p>Zhang এবং সহকর্মীরা (2025), "Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-Based Agents" শিরোনামে, এআই-এজেন্ট সিস্টেমে নিরাপত্তা-শর্ত ও প্রতিরক্ষামূলক ব্যবস্থা মূল্যায়নের একটি কাঠামোবদ্ধ পদ্ধতি উপস্থাপন করেন। এই কাজ পুনরাবৃত্তিযোগ্য পরীক্ষা-দৃশ্যকল্প এবং পরিমাপযোগ্য মূল্যায়নের গুরুত্বকে সমর্থন করে।</p>
+    <p>এই প্রকাশনাগুলো কার্যকর প্রযুক্তিগত প্রেক্ষাপট প্রদান করে, কিন্তু তাদের গবেষণা-গুরুত্ব প্রস্তাবিত গবেষণার সঙ্গে অভিন্ন নয়। বর্তমান গবেষণা এই বিষয়ে মনোযোগ দেবে যে পর্যবেক্ষণযোগ্য স্মৃতি-সম্পর্কিত সূচকের সংমিশ্রণ কার্যকর প্রাথমিক সতর্কতা দিতে পারে কি না এবং একটি বিশ্বস্ত ভিত্তিরেখার বিপরীতে সাড়া ও পুনরুদ্ধার কীভাবে পরিমাপ করা যায়।</p>
+    <p>উপরে তালিকাভুক্ত ২০২৬ সালের গবেষণাগুলো সাম্প্রতিক প্রিপ্রিন্ট। চূড়ান্ত জমাদানের আগে তাদের প্রকাশনার অবস্থা ও গ্রন্থপঞ্জি-বিবরণ পুনরায় যাচাই করা উচিত। তাদের ফলাফল সতর্কতার সঙ্গে বর্ণনা করা উচিত এবং প্রতিষ্ঠিত ঐকমত্য হিসেবে উপস্থাপন করা উচিত নয়।</p>
+  </div>
+
+  <!-- 2.9 -->
+  <h3>
+    <span data-lang-en>2.9 Predictive Risk Assessment and Early Warning</span>
+    <span data-lang-bn hidden>২.৯ পূর্বানুমানমূলক ঝুঁকি মূল্যায়ন ও প্রাথমিক সতর্কতা</span>
+  </h3>
+  <div data-lang-en>
+    <p>Conventional security monitoring often identifies an event after a defined condition has occurred or after a deviation becomes visible. Such detection remains important, but it does not necessarily establish whether an earlier pattern could have provided a warning before a more significant impact.</p>
+    <p>Predictive risk assessment investigates whether observable indicators are associated with a future risk condition. A suitable assessment process requires a defined baseline, time-stamped observations, measurable features, clearly specified outcomes, and evaluation against experimental evidence.</p>
+    <p>For this study, the proposed process consists of the following stages:</p>
+    <ol>
+      <li>Establish a trusted baseline of memory state and expected system behaviour.</li>
+      <li>Collect time-stamped observations from relevant system components.</li>
+      <li>Identify measurable changes in integrity, provenance, behaviour, persistence, and language-related conditions.</li>
+      <li>Examine whether repeated observations form patterns associated with a defined risk outcome.</li>
+      <li>Develop a transparent risk-assessment method using evidence from the experiments.</li>
+      <li>Evaluate whether warnings occur before the defined outcome.</li>
+      <li>Measure false positives, missed detections, signal consistency, and detection lead time.</li>
+    </ol>
+    <p>A repeated anomaly should not automatically be treated as a predictive signal. Its predictive value must be assessed by comparing observations with subsequent outcomes under controlled conditions. The study will therefore distinguish between an observed deviation, a risk indicator, and a validated early-warning signal.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>প্রচলিত নিরাপত্তা-পর্যবেক্ষণ প্রায়শই একটি নির্দিষ্ট শর্ত ঘটে যাওয়ার পরে বা একটি বিচ্যুতি দৃশ্যমান হওয়ার পরে একটি ঘটনা চিহ্নিত করে। এই ধরনের শনাক্তকরণ গুরুত্বপূর্ণ থাকে, তবে এটি অগত্যা প্রতিষ্ঠা করে না যে পূর্ববর্তী কোনো প্যাটার্ন আরও উল্লেখযোগ্য প্রভাবের আগে সতর্কতা দিতে পারত কি না।</p>
+    <p>পূর্বানুমানমূলক ঝুঁকি মূল্যায়ন তদন্ত করে যে পর্যবেক্ষণযোগ্য সূচকগুলো ভবিষ্যতের ঝুঁকি-শর্তের সঙ্গে যুক্ত কি না। একটি উপযুক্ত মূল্যায়ন প্রক্রিয়ার জন্য প্রয়োজন একটি সংজ্ঞায়িত ভিত্তিরেখা, সময়-চিহ্নিত পর্যবেক্ষণ, পরিমাপযোগ্য বৈশিষ্ট্য, স্পষ্টভাবে নির্দিষ্ট ফলাফল এবং পরীক্ষামূলক প্রমাণের বিরুদ্ধে মূল্যায়ন।</p>
+    <p>এই গবেষণার জন্য, প্রস্তাবিত প্রক্রিয়াটি নিম্নলিখিত পর্যায়গুলি নিয়ে গঠিত:</p>
+    <ol>
+      <li>স্মৃতি-অবস্থা ও প্রত্যাশিত সিস্টেম-আচরণের একটি বিশ্বস্ত ভিত্তিরেখা প্রতিষ্ঠা করা।</li>
+      <li>সংশ্লিষ্ট সিস্টেম-উপাদান থেকে সময়-চিহ্নিত পর্যবেক্ষণ সংগ্রহ করা।</li>
+      <li>অখণ্ডতা, উৎস, আচরণ, স্থায়িত্ব এবং ভাষা-সম্পর্কিত অবস্থায় পরিমাপযোগ্য পরিবর্তন চিহ্নিত করা।</li>
+      <li>পরীক্ষা করা যে পুনরাবৃত্ত পর্যবেক্ষণ একটি নির্দিষ্ট ঝুঁকি-ফলাফলের সঙ্গে যুক্ত প্যাটার্ন গঠন করে কি না।</li>
+      <li>পরীক্ষাগুলোর প্রমাণ ব্যবহার করে একটি স্বচ্ছ ঝুঁকি-মূল্যায়ন পদ্ধতি বিকাশ করা।</li>
+      <li>নির্দিষ্ট ফলাফলের আগে সতর্কতা ঘটে কি না তা মূল্যায়ন করা।</li>
+      <li>মিথ্যা-ধনাত্মক, মিসড ডিটেকশন, সংকেত-ধারাবাহিকতা এবং শনাক্তকরণের সতর্ক-সময় পরিমাপ করা।</li>
+    </ol>
+    <p>একটি পুনরাবৃত্ত অসঙ্গতিকে স্বয়ংক্রিয়ভাবে পূর্বানুমানমূলক সংকেত হিসেবে বিবেচনা করা উচিত নয়। নিয়ন্ত্রিত অবস্থার অধীনে পর্যবেক্ষণকে পরবর্তী ফলাফলের সঙ্গে তুলনা করে এর পূর্বানুমানমূলক মূল্য মূল্যায়ন করতে হবে। তাই গবেষণাটি একটি পর্যবেক্ষিত বিচ্যুতি, একটি ঝুঁকি-সূচক এবং একটি যাচাইকৃত প্রাথমিক-সতর্কতা সংকেতের মধ্যে পার্থক্য রাখবে।</p>
+  </div>
+
+  <!-- 2.10 -->
+  <h3>
+    <span data-lang-en>2.10 Proposed Memory Risk Assessment Model</span>
+    <span data-lang-bn hidden>২.১০ প্রস্তাবিত স্মৃতি-ঝুঁকি মূল্যায়ন মডেল</span>
+  </h3>
+  <p><span class="badge-proposed">
+    <span data-lang-en>Conceptual model — to be validated through experimental evidence</span>
+    <span data-lang-bn hidden>ধারণাগত মডেল — পরীক্ষামূলক প্রমাণের মাধ্যমে যাচাইযোগ্য</span>
+  </span></p>
+  <div data-lang-en>
+    <p>Based on the reviewed literature, this study proposes a conceptual Memory Risk Score (MRS) represented as:</p>
+    <p><code>MRS = f(I, P, B, S, L)</code></p>
+    <p>Where:</p>
+    <ul>
+      <li><strong>I</strong> represents integrity-related indicators, such as unexpected memory modification or inconsistency with a trusted reference.</li>
+      <li><strong>P</strong> represents provenance-related indicators, such as an unverified information origin or an unexpected source change.</li>
+      <li><strong>B</strong> represents behavioural indicators, such as deviation from an established response or behaviour baseline.</li>
+      <li><strong>S</strong> represents persistence-related indicators, such as an unexpected change remaining across sessions or observations.</li>
+      <li><strong>L</strong> represents language-related variation, including differences observed across Bengali, Banglish, English, and mixed-language conditions.</li>
+    </ul>
+    <p>A preliminary weighted form may be considered:</p>
+    <p><code>MRS = wI(I) + wP(P) + wB(B) + wS(S) + wL(L)</code></p>
+    <p>The weights and thresholds will not be assumed to be correct in advance. They will need to be defined, justified, and evaluated using experimental evidence. The model is conceptual at the proposal stage and should not be presented as a validated predictive model until testing has been completed.</p>
+    <p>The proposed model is intended to support transparent risk assessment. It should allow the researcher to identify which indicators contributed to a warning and to examine the evidence behind the assigned risk level.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>পর্যালোচিত সাহিত্যের উপর ভিত্তি করে, এই গবেষণা একটি ধারণাগত স্মৃতি-ঝুঁকি স্কোর (MRS) প্রস্তাব করে যা এভাবে প্রকাশ করা হয়:</p>
+    <p><code>MRS = f(I, P, B, S, L)</code></p>
+    <p>যেখানে:</p>
+    <ul>
+      <li><strong>I</strong> অখণ্ডতা-সম্পর্কিত সূচক প্রতিনিধিত্ব করে, যেমন অপ্রত্যাশিত স্মৃতি-পরিবর্তন বা বিশ্বস্ত রেফারেন্সের সঙ্গে অসঙ্গতি।</li>
+      <li><strong>P</strong> উৎস-সম্পর্কিত সূচক প্রতিনিধিত্ব করে, যেমন অযাচাইকৃত তথ্য-উৎস বা অপ্রত্যাশিত উৎস-পরিবর্তন।</li>
+      <li><strong>B</strong> আচরণগত সূচক প্রতিনিধিত্ব করে, যেমন প্রতিষ্ঠিত প্রতিক্রিয়া বা আচরণ-ভিত্তিরেখা থেকে বিচ্যুতি।</li>
+      <li><strong>S</strong> স্থায়িত্ব-সম্পর্কিত সূচক প্রতিনিধিত্ব করে, যেমন সেশন বা পর্যবেক্ষণ জুড়ে অপ্রত্যাশিত পরিবর্তন থেকে যাওয়া।</li>
+      <li><strong>L</strong> ভাষা-সম্পর্কিত ভিন্নতা প্রতিনিধিত্ব করে, যার মধ্যে বাংলা, বাংলিশ, ইংরেজি এবং মিশ্র-ভাষার অবস্থার মধ্যে পর্যবেক্ষিত পার্থক্য অন্তর্ভুক্ত।</li>
+    </ul>
+    <p>একটি প্রাথমিক ওজনযুক্ত রূপ বিবেচনা করা যেতে পারে:</p>
+    <p><code>MRS = wI(I) + wP(P) + wB(B) + wS(S) + wL(L)</code></p>
+    <p>ওজন ও থ্রেশহোল্ড আগে থেকে সঠিক বলে ধরে নেওয়া হবে না। সেগুলো পরীক্ষামূলক প্রমাণ ব্যবহার করে সংজ্ঞায়িত, ন্যায্যতা-প্রদান এবং মূল্যায়ন করতে হবে। মডেলটি প্রস্তাবনা-পর্যায়ে ধারণাগত এবং পরীক্ষা সম্পন্ন হওয়ার আগে এটি একটি যাচাইকৃত পূর্বানুমানমূলক মডেল হিসেবে উপস্থাপন করা উচিত নয়।</p>
+    <p>প্রস্তাবিত মডেলটি স্বচ্ছ ঝুঁকি-মূল্যায়ন সমর্থন করার উদ্দেশ্যে তৈরি। এটি গবেষককে চিহ্নিত করতে দেবে কোন সূচকগুলো একটি সতর্কতায় অবদান রেখেছে এবং নির্ধারিত ঝুঁকি-স্তরের পিছনের প্রমাণ পরীক্ষা করতে দেবে।</p>
+  </div>
+
+  <!-- 2.11 -->
+  <h3>
+    <span data-lang-en>2.11 Cybersecurity Response, Recovery, and Resilience</span>
+    <span data-lang-bn hidden>২.১১ সাইবার নিরাপত্তা সাড়া, পুনরুদ্ধার ও সহনশীলতা</span>
+  </h3>
+  <div data-lang-en>
+    <p>The NIST Cybersecurity Framework 2.0 describes six cybersecurity functions: Govern, Identify, Protect, Detect, Respond, and Recover (NIST, 2024). These functions provide a useful structure for organising the operational aspects of the proposed research.</p>
+    <p>The Govern function relates to research responsibilities and oversight. Identify concerns the system components, information assets, and possible risks. Protect concerns safeguards such as access control and integrity verification. Detect concerns monitoring and identifying unexpected changes. Respond concerns controlled actions taken after a risk is identified. Recover concerns restoring the system to a trusted condition.</p>
+    <p>For the proposed experiments, response may involve collecting evidence, reviewing the relevant change, and isolating a suspicious experimental state. Recovery may involve restoring a verified baseline, checking the integrity of the restored information, and comparing system behaviour with the original baseline.</p>
+    <p>Recovery should not be considered successful merely because stored data has been restored. The study should also examine whether the restored information passes integrity checks and whether system behaviour returns to an acceptable level of consistency.</p>
+    <p>Relevant evaluation measures may include recovery success rate, time to restore a trusted state, post-recovery integrity, post-recovery behavioural consistency, and residual deviation from the original baseline.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>NIST সাইবার নিরাপত্তা কাঠামো 2.0 ছয়টি সাইবার নিরাপত্তা ফাংশন বর্ণনা করে: Govern, Identify, Protect, Detect, Respond এবং Recover (NIST, 2024)। এই ফাংশনগুলো প্রস্তাবিত গবেষণার পরিচালনাগত দিকগুলো সংগঠিত করার জন্য একটি কার্যকর কাঠামো প্রদান করে।</p>
+    <p>Govern ফাংশন গবেষণা-দায়িত্ব ও তত্ত্বাবধানের সঙ্গে সম্পর্কিত। Identify সিস্টেম-উপাদান, তথ্য-সম্পদ এবং সম্ভাব্য ঝুঁকির সঙ্গে সম্পর্কিত। Protect প্রবেশ-নিয়ন্ত্রণ এবং অখণ্ডতা-যাচাইয়ের মতো সুরক্ষার সঙ্গে সম্পর্কিত। Detect পর্যবেক্ষণ এবং অপ্রত্যাশিত পরিবর্তন চিহ্নিতকরণের সঙ্গে সম্পর্কিত। Respond ঝুঁকি চিহ্নিত হওয়ার পর নেওয়া নিয়ন্ত্রিত কার্যক্রমের সঙ্গে সম্পর্কিত। Recover সিস্টেমকে একটি বিশ্বস্ত অবস্থায় পুনঃস্থাপনের সঙ্গে সম্পর্কিত।</p>
+    <p>প্রস্তাবিত পরীক্ষাগুলোর জন্য, সাড়ায় প্রমাণ সংগ্রহ, সংশ্লিষ্ট পরিবর্তন পর্যালোচনা এবং সন্দেহজনক পরীক্ষামূলক অবস্থা বিচ্ছিন্নকরণ জড়িত থাকতে পারে। পুনরুদ্ধারে একটি যাচাইকৃত ভিত্তিরেখা পুনঃস্থাপন, পুনরুদ্ধারকৃত তথ্যের অখণ্ডতা পরীক্ষা এবং সিস্টেম-আচরণকে মূল ভিত্তিরেখার সঙ্গে তুলনা করা জড়িত থাকতে পারে।</p>
+    <p>কেবল সংরক্ষিত ডেটা পুনঃস্থাপিত হয়েছে বলে পুনরুদ্ধারকে সফল হিসেবে বিবেচনা করা উচিত নয়। গবেষণায় এটাও পরীক্ষা করা উচিত যে পুনরুদ্ধারকৃত তথ্য অখণ্ডতা-যাচাই পাস করে কি না এবং সিস্টেম-আচরণ গ্রহণযোগ্য স্তরের ধারাবাহিকতায় ফিরে আসে কি না।</p>
+    <p>সংশ্লিষ্ট মূল্যায়ন-পরিমাপের মধ্যে পুনরুদ্ধার-সফলতার হার, বিশ্বস্ত অবস্থা পুনঃস্থাপনের সময়, পুনরুদ্ধার-পরবর্তী অখণ্ডতা, পুনরুদ্ধার-পরবর্তী আচরণগত ধারাবাহিকতা এবং মূল ভিত্তিরেখা থেকে অবশিষ্ট বিচ্যুতি অন্তর্ভুক্ত থাকতে পারে।</p>
+  </div>
+
+  <!-- 2.12 -->
+  <h3>
+    <span data-lang-en>2.12 Bengali, Banglish, and Multilingual AI Evaluation</span>
+    <span data-lang-bn hidden>২.১২ বাংলা, বাংলিশ ও বহুভাষিক এআই মূল্যায়ন</span>
+  </h3>
+  <div data-lang-en>
+    <p>The ShorbornoAI Bengali Knowledge Platform provides a context for examining memory-related security indicators under Bengali, Banglish, English, and mixed-language conditions. The same concept may be expressed using Bengali script, Romanised Bengali, English, or code-switched language. Differences in spelling, transliteration, wording, and expression may influence how information is processed and retained.</p>
+    <p>The study will compare equivalent information under controlled language conditions. It will examine whether memory retention, information consistency, behavioural responses, and risk indicators remain comparable across those conditions.</p>
+    <p>The experiment should keep the intended meaning and other relevant conditions as consistent as possible. Any observed difference should be examined carefully to distinguish normal linguistic variation from a security-relevant deviation. The study will not assume that a language condition is inherently more or less secure. Conclusions will be based on collected evidence.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>শরবর্ণএআই বাংলা নলেজ প্ল্যাটফর্ম বাংলা, বাংলিশ, ইংরেজি এবং মিশ্র-ভাষার অবস্থার অধীনে স্মৃতি-সম্পর্কিত নিরাপত্তা সূচক পরীক্ষার জন্য একটি প্রেক্ষাপট প্রদান করে। একই ধারণা বাংলা লিপি, রোমানাইজড বাংলা, ইংরেজি বা কোড-সুইচড ভাষা ব্যবহার করে প্রকাশ করা যেতে পারে। বানান, প্রতিবর্ণীকরণ, শব্দচয়ন এবং প্রকাশে পার্থক্য তথ্য কীভাবে প্রক্রিয়া ও ধারণ করা হয় তা প্রভাবিত করতে পারে।</p>
+    <p>গবেষণাটি নিয়ন্ত্রিত ভাষা-শর্তের অধীনে সমতুল্য তথ্য তুলনা করবে। এটি পরীক্ষা করবে যে স্মৃতি-ধারণ, তথ্য-ধারাবাহিকতা, আচরণগত প্রতিক্রিয়া এবং ঝুঁকি-সূচক সেই শর্তগুলো জুড়ে তুলনীয় থাকে কি না।</p>
+    <p>পরীক্ষায় অভিপ্রেত অর্থ এবং অন্যান্য সংশ্লিষ্ট শর্ত যতটা সম্ভব সামঞ্জস্যপূর্ণ রাখা উচিত। যেকোনো পর্যবেক্ষিত পার্থক্য সাবধানে পরীক্ষা করা উচিত যাতে স্বাভাবিক ভাষাগত ভিন্নতা এবং নিরাপত্তা-সংশ্লিষ্ট বিচ্যুতির মধ্যে পার্থক্য করা যায়। গবেষণাটি ধরে নেবে না যে কোনো ভাষা-শর্ত সহজাতভাবে বেশি বা কম নিরাপদ। সিদ্ধান্ত সংগৃহীত প্রমাণের উপর ভিত্তি করে হবে।</p>
+  </div>
+
+  <!-- 2.13 -->
+  <h3>
+    <span data-lang-en>2.13 Research Gap</span>
+    <span data-lang-bn hidden>২.১৩ গবেষণা-শূন্যতা</span>
+  </h3>
+  <div data-lang-en>
+    <p>The reviewed literature establishes several important foundations. International AI risk-management frameworks describe how risks should be governed, mapped, measured, and managed. AI trustworthiness literature identifies characteristics such as reliability, safety, security, resilience, transparency, privacy, and fairness. Cybersecurity frameworks provide established functions for protection, detection, response, and recovery. Emerging AI-agent research also demonstrates that persistent memory can create security concerns when untrusted information is retained and influences later behaviour.</p>
+    <p>However, these areas leave a research opportunity for a controlled, memory-focused assessment that combines several types of observable evidence. In particular, this study proposes to investigate the combined use of integrity, provenance, behavioural, persistence, and language-related indicators to assess emerging memory risks. It will also examine whether these indicators provide useful early warning before a defined outcome and whether recovery can be evaluated against a trusted baseline.</p>
+    <p>The proposed research gap is therefore not that AI memory security has never been studied. Rather, the study will investigate a measurable assessment approach that brings together selected memory-related signals, predictive evaluation, multilingual testing, and recovery measurement within a controlled Bengali knowledge-platform environment.</p>
+    <p>This research gap is provisional and should be refined through a systematic search of relevant academic databases before final submission. The final literature review should compare the methods, datasets, evaluation measures, limitations, and findings of the selected studies rather than relying only on their abstracts.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>পর্যালোচিত সাহিত্য কয়েকটি গুরুত্বপূর্ণ ভিত্তি প্রতিষ্ঠা করে। আন্তর্জাতিক এআই ঝুঁকি-ব্যবস্থাপনা কাঠামো বর্ণনা করে কীভাবে ঝুঁকিগুলো শাসিত, ম্যাপকৃত, পরিমাপকৃত এবং ব্যবস্থাপিত করা উচিত। এআই বিশ্বস্ততা-সাহিত্য নির্ভরযোগ্যতা, সুরক্ষা, নিরাপত্তা, সহনশীলতা, স্বচ্ছতা, গোপনীয়তা এবং ন্যায্যতার মতো বৈশিষ্ট্য চিহ্নিত করে। সাইবার নিরাপত্তা কাঠামো সুরক্ষা, শনাক্তকরণ, সাড়া এবং পুনরুদ্ধারের জন্য প্রতিষ্ঠিত ফাংশন প্রদান করে। উদীয়মান এআই-এজেন্ট গবেষণাও প্রদর্শন করে যে অবিশ্বস্ত তথ্য ধরে রাখা হলে এবং পরবর্তী আচরণকে প্রভাবিত করলে স্থায়ী স্মৃতি নিরাপত্তা উদ্বেগ তৈরি করতে পারে।</p>
+    <p>তবে, এই ক্ষেত্রগুলো একটি নিয়ন্ত্রিত, স্মৃতি-কেন্দ্রিক মূল্যায়নের জন্য গবেষণা-সুযোগ রেখে যায় যা কয়েক ধরনের পর্যবেক্ষণযোগ্য প্রমাণ একত্রিত করে। বিশেষত, এই গবেষণা উদীয়মান স্মৃতি-ঝুঁকি মূল্যায়নের জন্য অখণ্ডতা, উৎস, আচরণগত, স্থায়িত্ব এবং ভাষা-সম্পর্কিত সূচকের সম্মিলিত ব্যবহার তদন্ত করার প্রস্তাব করে। এটি এটাও পরীক্ষা করবে যে এই সূচকগুলো একটি নির্দিষ্ট ফলাফলের আগে কার্যকর প্রাথমিক সতর্কতা দেয় কি না এবং একটি বিশ্বস্ত ভিত্তিরেখার বিপরীতে পুনরুদ্ধার মূল্যায়ন করা যায় কি না।</p>
+    <p>তাই প্রস্তাবিত গবেষণা-শূন্যতা এই নয় যে এআই স্মৃতি নিরাপত্তা কখনো অধ্যয়ন করা হয়নি। বরং, গবেষণাটি একটি পরিমাপযোগ্য মূল্যায়ন-পদ্ধতি তদন্ত করবে যা নির্বাচিত স্মৃতি-সম্পর্কিত সংকেত, পূর্বানুমানমূলক মূল্যায়ন, বহুভাষিক পরীক্ষা এবং একটি নিয়ন্ত্রিত বাংলা নলেজ-প্ল্যাটফর্ম পরিবেশের মধ্যে পুনরুদ্ধার-পরিমাপকে একত্রিত করে।</p>
+    <p>এই গবেষণা-শূন্যতা সাময়িক এবং চূড়ান্ত জমাদানের আগে সংশ্লিষ্ট একাডেমিক ডেটাবেসের পদ্ধতিগত অনুসন্ধানের মাধ্যমে পরিমার্জিত করা উচিত। চূড়ান্ত সাহিত্য পর্যালোচনায় নির্বাচিত গবেষণার পদ্ধতি, ডেটাসেট, মূল্যায়ন-পরিমাপ, সীমাবদ্ধতা এবং ফলাফল তুলনা করা উচিত, কেবল তাদের সারসংক্ষেপের উপর নির্ভর না করে।</p>
+  </div>
+
+  <!-- 2.14 -->
+  <h3>
+    <span data-lang-en>2.14 Expected Contribution of the Study</span>
+    <span data-lang-bn hidden>২.১৪ গবেষণার প্রত্যাশিত অবদান</span>
+  </h3>
+  <div data-lang-en>
+    <p>The expected contribution of this research is a proposed and experimentally evaluated Memory Risk Assessment Framework for AI systems. The framework will examine whether integrity, provenance, behavioural, persistence, and language-related indicators can provide useful evidence of emerging memory-related risks.</p>
+    <p>The study is expected to contribute in four areas:</p>
+    <p>First, it will define a set of measurable memory-related indicators and examine their usefulness under controlled conditions.</p>
+    <p>Second, it will investigate whether combining multiple indicators provides more useful early warning than relying only on the detection of an individual change or a post-impact event.</p>
+    <p>Third, it will evaluate whether Bengali, Banglish, English, and mixed-language conditions affect the consistency or visibility of selected indicators.</p>
+    <p>Fourth, it will measure response and recovery effectiveness by comparing the experimental state with a trusted baseline and a post-recovery state.</p>
+    <p>The study will report limitations, false positives, missed detections, and conditions under which the proposed approach does not perform as expected. Any claim about predictive effectiveness will be made only when supported by experimental results.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এই গবেষণার প্রত্যাশিত অবদান হলো এআই সিস্টেমের জন্য একটি প্রস্তাবিত ও পরীক্ষামূলকভাবে মূল্যায়িত স্মৃতি-ঝুঁকি মূল্যায়ন কাঠামো। কাঠামোটি পরীক্ষা করবে যে অখণ্ডতা, উৎস, আচরণগত, স্থায়িত্ব এবং ভাষা-সম্পর্কিত সূচক উদীয়মান স্মৃতি-সম্পর্কিত ঝুঁকির কার্যকর প্রমাণ দিতে পারে কি না।</p>
+    <p>গবেষণাটি চারটি ক্ষেত্রে অবদান রাখবে বলে প্রত্যাশিত:</p>
+    <p>প্রথমত, এটি পরিমাপযোগ্য স্মৃতি-সম্পর্কিত সূচকের একটি সেট সংজ্ঞায়িত করবে এবং নিয়ন্ত্রিত অবস্থার অধীনে তাদের কার্যকারিতা পরীক্ষা করবে।</p>
+    <p>দ্বিতীয়ত, এটি তদন্ত করবে যে একাধিক সূচক একত্রিত করা একটি একক পরিবর্তন বা প্রভাব-পরবর্তী ঘটনা শনাক্তকরণের উপর নির্ভর করার চেয়ে বেশি কার্যকর প্রাথমিক সতর্কতা দেয় কি না।</p>
+    <p>তৃতীয়ত, এটি মূল্যায়ন করবে যে বাংলা, বাংলিশ, ইংরেজি এবং মিশ্র-ভাষার অবস্থা নির্বাচিত সূচকের ধারাবাহিকতা বা দৃশ্যমানতাকে প্রভাবিত করে কি না।</p>
+    <p>চতুর্থত, এটি পরীক্ষামূলক অবস্থাকে একটি বিশ্বস্ত ভিত্তিরেখা এবং পুনরুদ্ধার-পরবর্তী অবস্থার সঙ্গে তুলনা করে সাড়া ও পুনরুদ্ধারের কার্যকারিতা পরিমাপ করবে।</p>
+    <p>গবেষণাটি সীমাবদ্ধতা, মিথ্যা-ধনাত্মক, মিসড ডিটেকশন এবং যে শর্তগুলোতে প্রস্তাবিত পদ্ধতি প্রত্যাশিতভাবে কাজ করে না তা প্রতিবেদন করবে। পূর্বানুমানমূলক কার্যকারিতা সম্পর্কে যেকোনো দাবি কেবল পরীক্ষামূলক ফলাফল দ্বারা সমর্থিত হলে করা হবে।</p>
+  </div>
+
+  <!-- 2.15 -->
+  <h3>
+    <span data-lang-en>2.15 Chapter Summary</span>
+    <span data-lang-bn hidden>২.১৫ অধ্যায় সারসংক্ষেপ</span>
+  </h3>
+  <div data-lang-en>
+    <p>This chapter reviewed AI risk and trustworthiness, international risk-management frameworks, information integrity, provenance, emerging memory-related security research, predictive risk assessment, cybersecurity resilience, and multilingual AI evaluation.</p>
+    <p>The literature provides a foundation for examining memory as a security-relevant component of AI systems. It also indicates the importance of lifecycle-based risk management, traceable information changes, measurable monitoring, and evidence-based recovery.</p>
+    <p>Building on these foundations, the proposed study will develop and evaluate a conceptual Memory Risk Assessment Framework using the ShorbornoAI Bengali Knowledge Platform. The next chapter will describe the research methodology, experimental environment, datasets, controlled scenarios, telemetry collection, assessment model, evaluation metrics, and research-integrity safeguards.</p>
+  </div>
+  <div data-lang-bn hidden>
+    <p>এই অধ্যায়ে এআই ঝুঁকি ও বিশ্বস্ততা, আন্তর্জাতিক ঝুঁকি-ব্যবস্থাপনা কাঠামো, তথ্য-অখণ্ডতা, উৎস, উদীয়মান স্মৃতি-সম্পর্কিত নিরাপত্তা গবেষণা, পূর্বানুমানমূলক ঝুঁকি মূল্যায়ন, সাইবার সহনশীলতা এবং বহুভাষিক এআই মূল্যায়ন পর্যালোচনা করা হয়েছে।</p>
+    <p>সাহিত্য এআই সিস্টেমের একটি নিরাপত্তা-সংশ্লিষ্ট উপাদান হিসেবে স্মৃতি পরীক্ষার ভিত্তি প্রদান করে। এটি জীবনচক্র-ভিত্তিক ঝুঁকি ব্যবস্থাপনা, ট্রেসযোগ্য তথ্য-পরিবর্তন, পরিমাপযোগ্য পর্যবেক্ষণ এবং প্রমাণ-ভিত্তিক পুনরুদ্ধারের গুরুত্বও নির্দেশ করে।</p>
+    <p>এই ভিত্তিগুলোর উপর নির্মাণ করে, প্রস্তাবিত গবেষণা শরবর্ণএআই বাংলা নলেজ প্ল্যাটফর্ম ব্যবহার করে একটি ধারণাগত স্মৃতি-ঝুঁকি মূল্যায়ন কাঠামো তৈরি ও মূল্যায়ন করবে। পরবর্তী অধ্যায়ে গবেষণা-পদ্ধতি, পরীক্ষামূলক পরিবেশ, ডেটাসেট, নিয়ন্ত্রিত দৃশ্যকল্প, টেলিমেট্রি সংগ্রহ, মূল্যায়ন মডেল, মূল্যায়ন-মেট্রিক এবং গবেষণা-অখণ্ডতা সুরক্ষা বর্ণনা করা হবে।</p>
+  </div>
+
+  <!-- REFERENCES -->
+  <h3 class="references-header">
+    <span data-lang-en>References</span>
+    <span data-lang-bn hidden>তথ্যসূত্র</span>
+  </h3>
+  <div class="references" data-lang-en style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">
+    <p>Dash, P., Ge, T., Jain, A., Shah, T., &amp; Shang, Z. (2026). <em>From untrusted input to trusted memory: A systematic study of memory poisoning attacks in LLM agents.</em> arXiv preprint. https://arxiv.org/abs/2606.04329</p>
+    <p>Huang, S., Zhang, J., &amp; Jia, H. (2026). <em>When malicious instructions persist: Persistent memory poisoning attack on harness-based agents.</em> arXiv preprint. https://arxiv.org/abs/2609.13889</p>
+    <p>International Organization for Standardization. (2023a). <em>ISO/IEC 23894:2023: Information technology—Artificial intelligence—Guidance on risk management.</em> https://www.iso.org/standard/77304.html</p>
+    <p>International Organization for Standardization. (2023b). <em>ISO/IEC 42001:2023: Information technology—Artificial intelligence—Management system.</em> https://www.iso.org/standard/42001</p>
+    <p>National Institute of Standards and Technology. (2023). <em>Artificial intelligence risk management framework (AI RMF 1.0)</em> (NIST AI 100-1). https://doi.org/10.6028/NIST.AI.100-1</p>
+    <p>National Institute of Standards and Technology. (2024a). <em>Artificial intelligence risk management framework: Generative artificial intelligence profile</em> (NIST AI 600-1). https://doi.org/10.6028/NIST.AI.600-1</p>
+    <p>National Institute of Standards and Technology. (2024b). <em>The NIST cybersecurity framework (CSF) 2.0</em> (NIST CSWP 29). https://doi.org/10.6028/NIST.CSWP.29</p>
+    <p>Organisation for Economic Co-operation and Development. (2019). <em>OECD principles on artificial intelligence.</em> https://oecd.ai/en/dashboards/policy-initiatives/oecd-ai-principles-9705</p>
+    <p>UNESCO. (2021). <em>Recommendation on the ethics of artificial intelligence.</em> https://www.unesco.org/en/legal-affairs/recommendation-ethics-artificial-intelligence</p>
+    <p>Zhang, H., et al. (2025). <em>Agent Security Bench (ASB): Formalizing and benchmarking attacks and defenses in LLM-based agents.</em> International Conference on Learning Representations. https://mlanthology.org/iclr/2025/zhang2025iclr-agent/</p>
+  </div>
+  <div class="references" data-lang-bn hidden style="font-size: 14px; line-height: 1.6; color: var(--text-muted);">
+    <p>Dash, P., Ge, T., Jain, A., Shah, T., &amp; Shang, Z. (2026). <em>From untrusted input to trusted memory: A systematic study of memory poisoning attacks in LLM agents.</em> arXiv preprint. https://arxiv.org/abs/2606.04329</p>
+    <p>Huang, S., Zhang, J., &amp; Jia, H. (2026). <em>When malicious instructions persist: Persistent memory poisoning attack on harness-based agents.</em> arXiv preprint. https://arxiv.org/abs/2609.13889</p>
+    <p>International Organization for Standardization. (2023a). <em>ISO/IEC 23894:2023: Information technology—Artificial intelligence—Guidance on risk management.</em> https://www.iso.org/standard/77304.html</p>
+    <p>International Organization for Standardization. (2023b). <em>ISO/IEC 42001:2023: Information technology—Artificial intelligence—Management system.</em> https://www.iso.org/standard/42001</p>
+    <p>National Institute of Standards and Technology. (2023). <em>Artificial intelligence risk management framework (AI RMF 1.0)</em> (NIST AI 100-1). https://doi.org/10.6028/NIST.AI.100-1</p>
+    <p>National Institute of Standards and Technology. (2024a). <em>Artificial intelligence risk management framework: Generative artificial intelligence profile</em> (NIST AI 600-1). https://doi.org/10.6028/NIST.AI.600-1</p>
+    <p>National Institute of Standards and Technology. (2024b). <em>The NIST cybersecurity framework (CSF) 2.0</em> (NIST CSWP 29). https://doi.org/10.6028/NIST.CSWP.29</p>
+    <p>Organisation for Economic Co-operation and Development. (2019). <em>OECD principles on artificial intelligence.</em> https://oecd.ai/en/dashboards/policy-initiatives/oecd-ai-principles-9705</p>
+    <p>UNESCO. (2021). <em>Recommendation on the ethics of artificial intelligence.</em> https://www.unesco.org/en/legal-affairs/recommendation-ethics-artificial-intelligence</p>
+    <p>Zhang, H., et al. (2025). <em>Agent Security Benchmark (ASB): Formalizing and benchmarking attacks and defenses in LLM-based agents.</em> International Conference on Learning Representations. https://mlanthology.org/iclr/2025/zhang2025iclr-agent/</p>
+  </div>
+</section>
+
+<!-- 23. SIGNATURES -->
+<section id="signatures" class="section">
+  <header class="section-header">
+    <div class="section-number">23</div>
+    <h2>
+      <span data-lang-en>Signatures</span>
+      <span data-lang-bn hidden>স্বাক্ষর</span>
+    </h2>
+  </header>
+  
+  <p data-lang-en>By signing below, the students confirm that this proposal represents their own work and is ready for academic evaluation.</p>
+  <p data-lang-bn hidden>নিচে স্বাক্ষর করে, শিক্ষার্থীরা নিশ্চিত করছে যে এই প্রস্তাবনাটি তাদের নিজস্ব কাজের প্রতিনিধিত্ব করে এবং একাডেমিক মূল্যায়নের জন্য প্রস্তুত।</p>
+
+  <div class="signature-grid">
+    <div>
+      <div class="sig-line">
+        <div class="sig-name">Md. Aminul Islam</div>
+        <div class="sig-role">Roll: 70002</div>
+        <div class="sig-role">Date: _______________</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line">
+        <div class="sig-name">Alvee Talukder</div>
+        <div class="sig-role">Roll: 70062</div>
+        <div class="sig-role">Date: _______________</div>
+      </div>
+    </div>
+    <div class="sig-supervisor">
+      <div class="sig-line">
+        <div class="sig-name">Prof. Dr. Md. Rezaul Karim</div>
+        <div class="sig-role">Supervisor</div>
+        <div class="sig-role">Date: _______________</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p>
+    <span data-lang-en>ShorbornoAI Research · PMICS · Department of CSE · University of Dhaka</span>
+    <span data-lang-bn hidden>শরবর্ণএআই গবেষণা · PMICS · CSE বিভাগ · ঢাকা বিশ্ববিদ্যালয়</span>
+  </p>
+  <p>
+    <span data-lang-en>Proposed research concept — results to be established through evaluation.</span>
+    <span data-lang-bn hidden>প্রস্তাবিত গবেষণা ধারণা — মূল্যায়নের মাধ্যমে ফলাফল প্রতিষ্ঠিত হবে।</span>
+  </p>
+</footer>
+
+<div class="pres-bar" id="presBar" role="region" aria-label="Presentation controls" hidden>
+  <button id="presPrev" aria-label="Previous section">←</button>
+  <span id="presCounter" aria-live="polite">1 / 23</span>
+  <button id="presNext" aria-label="Next section">→</button>
+  <div class="pres-divider" aria-hidden="true"></div>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button data-set-lang="en" aria-pressed="true">EN</button>
+    <button data-set-lang="bn" aria-pressed="false">বাংলা</button>
+  </div>
+  <button id="presExit" aria-label="Exit presentation mode">
+    <span data-lang-en>✕ Exit</span>
+    <span data-lang-bn hidden>✕ প্রস্থান</span>
+  </button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============ LANGUAGE ============ */
+  var LANG_KEY = 'shorborno-research-lang';
+  function applyLang(lang) {
+    if (lang !== 'en' && lang !== 'bn') lang = 'en';
+    document.body.dataset.lang = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-lang-en]').forEach(function (el) {
+      el.hidden = lang !== 'en';
+    });
+    document.querySelectorAll('[data-lang-bn]').forEach(function (el) {
+      el.hidden = lang !== 'bn';
+    });
+    document.querySelectorAll('.lang-toggle button').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.setLang === lang ? 'true' : 'false');
+    });
+    try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+  }
+  var storedLang = null;
+  try { storedLang = localStorage.getItem(LANG_KEY); } catch (e) {}
+  var initialLang = storedLang
+    || (navigator.language && /^bn/i.test(navigator.language) ? 'bn' : 'en');
+  applyLang(initialLang);
+
+  document.querySelectorAll('.lang-toggle button').forEach(function (b) {
+    b.addEventListener('click', function () { applyLang(b.dataset.setLang); });
+  });
+
+  /* ============ PROGRESS BAR ============ */
+  var progressFill = document.getElementById('progressFill');
+  function updateProgress() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    progressFill.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  /* ============ NAV SCROLL SPY ============ */
+  var sections = Array.prototype.slice.call(document.querySelectorAll('main > section[id]'));
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.primary-nav a[href^="#"]'));
+  var byId = {};
+  navLinks.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    byId[id] = a;
+  });
+
+  function setActiveNav(id) {
+    navLinks.forEach(function (a) {
+      var isActive = a === byId[id];
+      a.classList.toggle('active', isActive);
+      if (isActive) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) setActiveNav(e.target.id);
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function (s) { io.observe(s); });
+  }
+
+  /* ============ PRESENTATION MODE ============ */
+  var currentIdx = 0;
+  var presBar = document.getElementById('presBar');
+  var presCounter = document.getElementById('presCounter');
+  var enterBtn = document.getElementById('enterPresentation');
+
+  function renderPres() {
+    sections.forEach(function (s, i) {
+      s.classList.toggle('presentation-active', i === currentIdx);
+    });
+    presCounter.textContent = (currentIdx + 1) + ' / ' + sections.length;
+    var active = sections[currentIdx];
+    if (active) window.scrollTo({ top: 0, behavior: 'auto' });
+    if (active && active.scrollIntoView) {
+      active.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+  }
+
+  function enterPresentation() {
+    currentIdx = 0;
+    document.body.classList.add('presentation');
+    presBar.hidden = false;
+    renderPres();
+  }
+
+  function exitPresentation() {
+    document.body.classList.remove('presentation');
+    presBar.hidden = true;
+    sections.forEach(function (s) { s.classList.remove('presentation-active'); });
+  }
+
+  function navigate(delta) {
+    var next = currentIdx + delta;
+    if (next < 0) next = 0;
+    if (next > sections.length - 1) next = sections.length - 1;
+    currentIdx = next;
+    renderPres();
+  }
+
+  enterBtn.addEventListener('click', enterPresentation);
+  document.getElementById('presExit').addEventListener('click', exitPresentation);
+  document.getElementById('presPrev').addEventListener('click', function () { navigate(-1); });
+  document.getElementById('presNext').addEventListener('click', function () { navigate(1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!document.body.classList.contains('presentation')) return;
+    if (e.key === 'Escape') { e.preventDefault(); exitPresentation(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault(); navigate(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); navigate(-1);
+    } else if (e.key === 'Home') {
+      e.preventDefault(); currentIdx = 0; renderPres();
+    } else if (e.key === 'End') {
+      e.preventDefault(); currentIdx = sections.length - 1; renderPres();
+    }
+  });
+
+  /* initialize */
+  renderPres();
+
+  /* ============ EXPORT AS PDF ============ */
+  document.getElementById('exportPdf').addEventListener('click', function () {
+    window.print();
+  });
+
+  /* ============ EXPORT AS POWERPOINT ============ */
+  document.getElementById('exportPpt').addEventListener('click', function () {
+    if (typeof PptxGenJS === 'undefined') {
+      alert("PowerPoint export library not loaded. Please check your internet connection.");
+      return;
+    }
+
+    let pptx = new PptxGenJS();
+    // Using 16:9 Widescreen as standard for presentations
+    pptx.layout = 'LAYOUT_WIDE';
+    const isEn = document.body.dataset.lang === 'en';
+
+    sections.forEach((section) => {
+      let slide = pptx.addSlide();
+      let titleEl = section.querySelector('h2');
+      let title = titleEl ? titleEl.innerText.replace(/[\n\r]+/g, ' ').trim() : '';
+
+      // Collect text content
+      let texts = [];
+      section.querySelectorAll('p, li').forEach(el => {
+        if (el.offsetParent !== null) {
+          let text = el.innerText.replace(/[\n\r]+/g, ' ').trim();
+          if (text) texts.push(text);
+        }
+      });
+
+      // Title styling: 28-36 pt
+      slide.addText(title, {
+        x: 0.5, y: 0.5, w: '90%', h: 1.2,
+        fontSize: 32, bold: true, color: '102B50', fontFace: isEn ? 'Arial' : 'Arial'
+      });
+
+      // Body text styling: 18-24 pt
+      let bodyText = texts.join('\n\n');
+      slide.addText(bodyText, {
+        x: 0.5, y: 1.8, w: '90%', h: '75%',
+        fontSize: 20, color: '333333', fontFace: isEn ? 'Arial' : 'Arial',
+        bullet: true
+      });
+
+      // Footer
+      slide.addText('ShorbornoAI Research · PMICS · University of Dhaka', {
+        x: 0.5, y: '90%', w: '100%', h: 0.5,
+        fontSize: 12, color: '888888', align: 'center'
+      });
+    });
+
+    pptx.writeFile({ fileName: `ShorbornoAI_Research_${document.body.dataset.lang.toUpperCase()}.pptx` });
+  });
+})();
+</script>
+
+</body>
+</html>

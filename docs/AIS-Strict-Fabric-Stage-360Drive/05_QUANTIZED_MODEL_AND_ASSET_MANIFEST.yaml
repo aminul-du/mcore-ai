@@ -1,0 +1,46 @@
+# 05. Quantized Model & Asset Manifest
+# Document Authority: MCORE-AIS-MODEL-005
+version: "1.0.0"
+updated_at: "2026-11-19T20:20:00Z"
+maintainer: "Aminul Islam Shamim (AIS)"
+
+quantization_profiles:
+  speech_recognition:
+    model: "Systran/faster-whisper-small"
+    format: "CTranslate2 (CT2)"
+    precision: "int8"
+    vram_mb: 280
+    latency_ms: 45
+    bengali_support: true
+
+  speech_synthesis_bengali:
+    model: "MeloTTS-Bengali / VITS-Shorborno"
+    format: "ONNX / ExecuTorch PTE"
+    precision: "int8_scalar"
+    file_size_mb: 64
+    sampling_rate: 24000
+    dari_punctuation_handled: true
+
+  edge_llm_reasoning:
+    model: "Meta-Llama-3.3-70B-Instruct"
+    surface: "Cloudflare Workers AI"
+    precision: "fp8_fast"
+    context_window: 8192
+
+  on_device_llm:
+    model: "Gemini Nano / Llama-3.2-3B"
+    surface: "Android AICore / ExecuTorch"
+    precision: "int4_awq"
+    ram_mb: 1850
+
+vector_caching:
+  l1_semantic_cache:
+    engine: "sqlite-vec"
+    dimension: 384
+    similarity_metric: "cosine"
+    cache_threshold: 0.94
+  l2_vector_store:
+    engine: "Qdrant"
+    host: "127.0.0.1:6333"
+    quantization: "int8_scalar"
+    indexing: "hnsw"

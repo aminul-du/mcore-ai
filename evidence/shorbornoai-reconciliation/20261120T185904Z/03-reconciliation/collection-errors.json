@@ -1,0 +1,32 @@
+[
+  {
+    "file": "02-cloudflare-live-state/d1-databases.json",
+    "status": "401",
+    "endpoint": "/accounts/41903f4febb2c66dffd4ffcae558e692/d1/database"
+  },
+  {
+    "file": "02-cloudflare-live-state/workers.json",
+    "status": "400",
+    "endpoint": "/accounts/41903f4febb2c66dffd4ffcae558e692/workers/scripts"
+  },
+  {
+    "file": "02-cloudflare-live-state/kv-namespaces.json",
+    "status": "401",
+    "endpoint": "/accounts/41903f4febb2c66dffd4ffcae558e692/storage/kv/namespaces"
+  },
+  {
+    "file": "02-cloudflare-live-state/zones.json",
+    "status": "400",
+    "endpoint": "/zones?name=sorbornoai.com"
+  },
+  {
+    "file": "02-cloudflare-live-state/pages-projects.json",
+    "status": "400",
+    "endpoint": "/accounts/41903f4febb2c66dffd4ffcae558e692/pages/projects"
+  },
+  {
+    "file": "02-cloudflare-live-state/account.json",
+    "status": "400",
+    "endpoint": "/accounts/41903f4febb2c66dffd4ffcae558e692"
+  }
+]

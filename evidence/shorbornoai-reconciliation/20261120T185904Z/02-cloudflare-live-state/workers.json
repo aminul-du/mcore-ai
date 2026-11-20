@@ -1,0 +1,5 @@
+{
+  "audit_error": true,
+  "endpoint": "/accounts/41903f4febb2c66dffd4ffcae558e692/workers/scripts",
+  "http_status": "400"
+}

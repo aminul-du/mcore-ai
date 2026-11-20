@@ -1,0 +1,5 @@
+{
+  "audit_error": true,
+  "endpoint": "/zones?name=sorbornoai.com",
+  "http_status": "400"
+}
