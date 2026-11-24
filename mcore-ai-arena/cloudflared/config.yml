@@ -1,0 +1,9 @@
+# MCore #MCORE-NET-001 Zero-Trust QUIC Ingress (arena.mcoreai.com -> 127.0.0.1:18088)
+protocol: quic
+ingress:
+  - hostname: arena.mcoreai.com
+    service: http://127.0.0.1:18088
+    originRequest:
+      noTLSVerify: true
+      connectTimeout: 30s
+  - service: http_status:404

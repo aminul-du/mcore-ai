@@ -1,0 +1,17 @@
+name: MCore AI Production CI/CD
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Production Images
+        run: docker compose -f docker-compose.prod.yml build
+      - name: Run Smoke Test
+        run: |
+          docker compose -f docker-compose.prod.yml up -d
+          sleep 8
+          curl -fsS http://127.0.0.1:18088/api/health
+          docker compose -f docker-compose.prod.yml down
